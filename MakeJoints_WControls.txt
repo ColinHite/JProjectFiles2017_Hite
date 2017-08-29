@@ -3,21 +3,28 @@ int $howManyJoints = 6;
 for ($i = 0; $i < $howManyJoints; $i++)
 {
     
-joint -p $i 0 0 ;
+    joint -p $i 0 0 ;
 
 }
 
 for ($i = 0; $i < $howManyJoints; $i++)
 {
     
-circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1;
+    circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1;
 
-int $moveIniJointVar = $moveIniJointVar + $i;
-move -r $moveIniJointVar 0 0 ;
+    move -r $i 0 0 ;
 
-rotate -r -os -fo 180 0 90 ;
+    rotate -r -os -fo 180 0 90 ;
 
 }
+
+for ($i = 0; $i < $howManyJoints; $i++)
+{
+    CreateEmptyGroup;
+    move -r $i 0 0 ;
+}
+
+//connectAttr -f nurbsCircle1.rotate joint1.rotate;
 
 select -all;
 makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 -pn 1;
