@@ -1,0 +1,42 @@
+//The purpose of this script is to create a rudementary snowman
+
+//Main body of the snowman
+polySphere -r 3 -sx 10 -sy 10 -ax 0 1 0 -cuv 2 -ch 1;
+move -r 0 2.5 0 ;
+polySoftEdge -a 180 -ch 1;
+
+//Snowman torso
+polySphere -r 2 -sx 10 -sy 10 -ax 0 1 0 -cuv 2 -ch 1;
+move -r 0 6 0 ;
+polySoftEdge -a 180 -ch 1;
+
+//Snowman head
+polySphere -r 1 -sx 10 -sy 10 -ax 0 1 0 -cuv 2 -ch 1;
+move -r 0 8.5 0 ;
+polySoftEdge -a 180 -ch 1;
+
+//Start of hand
+polyCylinder -r 0.1 -h 4 -sx 8 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+rotate -r -os -fo 0 0 -52.400649 ;
+move -r 2.433076 7.168722 0 ;
+select -tgl pCylinder1.f[16:23] ;
+//Defining branch shape first bend
+polyExtrudeFacet -constructionHistory 1 -keepFacesTogether 1 -pvx 4.017669484 -pvy 8.388994199 -pvz 3.725290298e-009 -divisions 1 -twist 0 -taper 1 -off 0 -thickness 0 -smoothingAngle 30 pCylinder1.f[16:23];
+
+setAttr "polyExtrudeFace1.localTranslate" -type double3 0 0 1.027651 ;
+setAttr "polyExtrudeFace1.localTranslate" -type double3 -0.592332 0 1.027651 ;
+setAttr "polyExtrudeFace1.localRotate" -type double3 -0.224154 -0.888095 0.500954 ;
+//second bend
+polyExtrudeFacet -constructionHistory 1 -keepFacesTogether 1 -pvx 4.470476572 -pvy 9.485301838 -pvz 0 -divisions 1 -twist 0 -taper 1 -off 0 -thickness 0 -smoothingAngle 30 pCylinder1.f[16:23];
+
+setAttr "polyExtrudeFace2.localTranslate" -type double3 0 0 0.905592 ;
+setAttr "polyExtrudeFace2.localRotate" -type double3 -0.00583076 -0.102065 0.0253072 ;
+setAttr "polyExtrudeFace2.localTranslate" -type double3 -0.878652 -0.0222409 0.81557 ;
+setAttr "polyExtrudeFace2.localRotate" -type double3 -0.202094 -0.884695 0.333039 ;
+//adding next branch
+select -cl  ;
+// Warning: Select an object that allows topology modification. // 
+select -r pCylinder1.e[32:33] pCylinder1.e[35] pCylinder1.e[37] pCylinder1.e[39] pCylinder1.e[41] pCylinder1.e[43] pCylinder1.e[45] ;
+
+polySplitRing -ch on -stp 1 -wt 0.116651 -sma 30 pCylinder1;
+// Result: polySplitRing1 // 
