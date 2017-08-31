@@ -1,0 +1,21 @@
+polygon prim
+extrude
+move/rotate/scale
+parameters
+parent/group
+rename
+--------
+Match the group node with the joint
+point the joint x orient out
+Move cv's not the object for simple replacement
+it goes group ----> control
+He puts the end point as .jnt for joints
+Group your joints same with controls to clean it up
+--------
+Identify joints
+create Joints
+-position
+-orient "Fixdown"
+Controls/grouping
+Constraints - controls --> Joints
+Skin Constrain
