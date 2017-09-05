@@ -1,0 +1,35 @@
+Float 
+int 
+string 
+array
+Vectors
+Matrix
+--------
+Syntax for mel
+--
+(data type)_$(variable) ;(colon ends line)
+
+$Selection = 3.1;
+$Selection = "stuff";
+
+(In mel the data type has no override or implicit translation ie. No float --> double)
+
+"\r" f[item:item];
+\r means return
+\n means new line
+
+initilizing an array is similar to C#
+
+(data type)_$(var name)[];
+
+$pos[0] = 3.1;
+
+string $sel[];
+
+$sel = '|s-s|'
+These tildas mean somthing when relating to selection keep it in mind if you have an error
+
+$sel == ["polyshpere1", ...];
+------------
+operators are the same as in C#
+Conditionals are also the same (==, <, <= ...)
