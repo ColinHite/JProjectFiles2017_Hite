@@ -17,5 +17,10 @@ create Joints
 -position
 -orient "Fixdown"
 Controls/grouping
-Constraints - controls --> Joints
+Constraints 
+- controls --> Joints
+- What this means is that you select the controls to control the joints.
 Skin Constrain
+---------
+(So the problem I ran into on 09/04/17 was that I didnt asign the rotaion values of the joint orient to the empty groups.
+Also if you want the controls to be where you put them then make sure you parent the controls after you get the transform values from the joint to the group)
