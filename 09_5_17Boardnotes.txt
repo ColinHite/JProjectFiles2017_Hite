@@ -33,3 +33,11 @@ $sel == ["polyshpere1", ...];
 ------------
 operators are the same as in C#
 Conditionals are also the same (==, <, <= ...)
+----------
+With the riggs the dino needs less joints and you should figure out what fk and an fk ik switch is or how to do it
+-Also the root joint should be seperate from the upper and lower half of the body. In this case it makes animation easier. 
+
+With the plane He recomended locking and hiding the visibility of the control
+-also could do things like value contriants 
+
+Cant remember much more that he recommended so just keep an eye out and ask for advice

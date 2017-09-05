@@ -24,7 +24,8 @@ for ($i = 0; $i < $howManyJoints; $i++)
     move -r $i 0 0 ;
 }
 
-//connectAttr -f nurbsCircle1.rotate joint1.rotate;
-
 select -all;
 makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 -pn 1;
+
+connectAttr -f nurbsCircle1.rotate joint1.rotate;
+connectAttr -f joint1.jointOrient null1.rotate;
