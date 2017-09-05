@@ -39,5 +39,6 @@ With the riggs the dino needs less joints and you should figure out what fk and 
 
 With the plane He recomended locking and hiding the visibility of the control
 -also could do things like value contriants 
+-Delete the history for the controls too
 
 Cant remember much more that he recommended so just keep an eye out and ask for advice
