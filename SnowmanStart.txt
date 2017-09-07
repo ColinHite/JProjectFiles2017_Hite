@@ -11,7 +11,7 @@ move -r 0 6 0 ;
 polySoftEdge -a 180 -ch 1;
 
 //Snowman head
-polySphere -r 1 -sx 10 -sy 10 -ax 0 1 0 -cuv 2 -ch 1;
+polySphere -r 1.4 -sx 10 -sy 10 -ax 0 1 0 -cuv 2 -ch 1;
 move -r 0 8.5 0 ;
 polySoftEdge -a 180 -ch 1;
 
@@ -65,5 +65,79 @@ move -r 0 0.0609473 0 ;
 select -r pCylinder1.vtx[42] ;
 select -tgl pCylinder1.vtx[46] ;
 move -r 0 0.0667859 0 ;
+
+//Making Hat
+polyCylinder -r 1 -h 2 -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+move -r -os -wd 0 10.8392 0 ;
+select -r pCylinder2.e[40:59] ;
+select -r pCylinder2.e[40:59] ;
+polySplitRing -ch on -splitType 1 -weight 0.112323 -smoothingAngle 30 -fixQuads 1 -insertWithEdgeFlow 0 ;
+
+select -r pCylinder2.e[100:101] pCylinder2.e[103] pCylinder2.e[105] pCylinder2.e[107] pCylinder2.e[109] pCylinder2.e[111] pCylinder2.e[113] pCylinder2.e[115] pCylinder2.e[117] pCylinder2.e[119] pCylinder2.e[121] pCylinder2.e[123] pCylinder2.e[125] pCylinder2.e[127] pCylinder2.e[129] pCylinder2.e[131] pCylinder2.e[133] pCylinder2.e[135] pCylinder2.e[137] ;
+select -r pCylinder2.e[100:101] pCylinder2.e[103] pCylinder2.e[105] pCylinder2.e[107] pCylinder2.e[109] pCylinder2.e[111] pCylinder2.e[113] pCylinder2.e[115] pCylinder2.e[117] pCylinder2.e[119] pCylinder2.e[121] pCylinder2.e[123] pCylinder2.e[125] pCylinder2.e[127] pCylinder2.e[129] pCylinder2.e[131] pCylinder2.e[133] pCylinder2.e[135] pCylinder2.e[137] ;
+polySplitRing -ch on -splitType 1 -weight 0.05226 -smoothingAngle 30 -fixQuads 1 -insertWithEdgeFlow 0 ;
+
+select -r pCylinder2.f[0:19] ;
+scale -r -p -1.19209e-007cm 9.951523cm -1.78814e-007cm 1.696146 1.696146 1.696146 ;
+scale -r -p -1.19209e-007cm 9.951523cm -1.78814e-007cm 1 0.537658 1 ;
+move -r -os -wd 0 0.142376 0 ;
+select -d pCylinder2.f[0:19] ;
+select -r pCylinder2.vtx[40] ;
+move -r -os -wd 0 0.179572 0 ;
+select -d pCylinder2.vtx[40] pCylinder2.f[0:19] ;
+select -r pCylinder2 ;
+move -r -os -wd 0 -0.55655 0 ;
+
+//Makin Buttons
+
+polySphere -r 1 -sx 10 -sy 10 -ax 0 1 0 -cuv 2 -ch 1;
+
+move -r -os -wd 0 8.424744 0 ;
+move -r -os -wd 0 0 1.801038 ;
+scale -r 0.189808 0.189808 0.189808 ;
+move -r -os -wd 0 -1.380614 0 ;
+move -r -os -wd 0 0 -0.234931 ;
+move -r -os -wd 0 0.103798 0 ;
+move -r -os -wd 0 0 -0.0415728 ;
+duplicate -rr;
+
+move -r -os -wd 0 -0.800977 0.337953 ;
+duplicate -rr;
+
+move -r -os -wd 0 -0.881295 -0.0527459 ;
+
+//Makin Eyes
+
+polySphere -r 1 -sx 10 -sy 10 -ax 0 1 0 -cuv 2 -ch 1;
+
+move -r -os -wd 0 8.577014 0 ;
+move -r -os -wd 0 0 1.928656 ;
+scale -r 0.236866 0.236866 0.236866 ;
+move -r -os -wd 0 0.228833 -0.549822 ;
+move -r -os -wd -0.520601 0 0 ;
+move -r -os -wd 0 0 -0.279364 ;
+select -r pSphere7 ;
+duplicate -rr;
+setAttr "pSphere8.translateX" 0.521;
+select -cl  ;
+
+//Soften coal
+
+select -r pSphere7 ;
+select -tgl pSphere8 ;
+select -tgl pSphere4 ;
+select -tgl pSphere5 ;
+select -tgl pSphere6 ;
+polySoftEdge -a 180 -ch 1 pSphere7;
+
+polySoftEdge -a 180 -ch 1 pSphere8;
+
+polySoftEdge -a 180 -ch 1 pSphere4;
+
+polySoftEdge -a 180 -ch 1 pSphere5;
+
+polySoftEdge -a 180 -ch 1 pSphere6;
+
+
 
 
