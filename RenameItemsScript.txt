@@ -1,0 +1,6 @@
+string $select[] = `ls -sl`;
+
+for ($i = 0; $i < size($select); $i++)
+{
+        rename $select[$i] ("Thing_" + $i + "_ctrl");
+}

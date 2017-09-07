@@ -1,0 +1,24 @@
+//Got this script from a lecture by clayton
+//What this does is takes your selection and applys a random position to your objects that are selected
+
+//(your going to have to change this so that it is "your own" delete this note after that is done)
+
+proc Randomize(int $num, int $range)
+{
+    string $sels[] = `ls -sl`;
+    
+    for ($i=0; $i<size($sels); $i++)
+    {
+        for ($j=0; $j<$num; $j++)
+        {
+            float $xPos = `rand ($range*-1) $range`;
+            float $yPos = `rand ($range*-1) $range`;
+            float $zPos = `rand ($range*-1) $range`;
+           
+            string $obj[] = `duplicate -rr $sels[$i]`;
+            move $xPos $yPos $zPos $obj[0];
+        }
+    }
+}
+
+Randomize(10, 10);
