@@ -1,0 +1,7 @@
+//Find the items you want to select
+
+//Find the bounding box of the selection by using the command exactWorldBoundingBox
+
+//Use the formula (x1 + x2)/2), y, and z respectivly
+
+//Make a locator at the found point
