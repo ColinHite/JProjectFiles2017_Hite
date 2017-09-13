@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 proc Rename()
 {
     string $sels[] = `ls -sl`;
@@ -62,69 +61,4 @@ proc string[] Rename(string $name)
     }
     return $returnNames;
 }
-=======
-proc Rename()
-{
-    string $sels[] = `ls -sl`;
-    string $name = "Test_#_Geo";
-    string $buffer[];//for the tokenized array
-    int $numTokens;
-    //These are ideas of how to find the # key in an object
-    //select -r "?_#_?";
-    //print(substituteAllString($name, "#", "1651651"));
-    //rename($name, substituteAllString($name, "#", "1651651"));
-    //rename $sels[0] 
-    
-    $numTokens = `tokenize $name "#" $buffer`;
-    
-    if($numTokens != 2){
-        error("You have too many hashtag symbols in your name");
-    }
-    for($i = 0; $i<size($sels); $i++)
-    {
-        string $newName;
-        $newName = $buffer[0] + ($i+1) + $buffer[1];
-        rename $sels[$i] $newName;
-    }
-}
-Rename();
-
-//Here is a way to add a new thing or name not so hard coded
-proc string[] Rename(string $name)
-{
-//this is the items selected in the scene
-    string $sels[] = `ls -sl`;
-
-//this array holds the tokens while we run the script
-    string $buffer[];//for the tokenized array
-//Simply the number of tokens
-    int $numTokens;
-//This is used to create an array that returns the new names from this procedure
-    string $returnNames[];
-
-    //These are ideas of how to find the # key in an object
-    //select -r "?_#_?";
-    //print(substituteAllString($name, "#", "1651651"));
-    //rename($name, substituteAllString($name, "#", "1651651"));
-    //rename $sels[0] 
-    
-//This makes the token
-    $numTokens = `tokenize $name "#" $buffer`;
-//This if checks for howmany tokens are made based on #
-    if($numTokens != 2){
-        error("You have too many hashtag symbols in your name");
-    }
-//This loops through the items made in your sels array
-    for($i = 0; $i<size($sels); $i++)
-    {
-        string $newName;
-//This changes the name by concatination
-        $newName = $buffer[0] + ($i+1) + $buffer[1];
-//THis makes the array of new names
-        stringArrayInsertAtIndex(size($returnNames), $returnNames, `rename $sels[$i] $newName`);
-        
-    }
-    return $returnNames;
-}
->>>>>>> master
 Rename("Test_#_Geo");
