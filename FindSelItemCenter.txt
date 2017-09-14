@@ -1,5 +1,5 @@
 //Find the items you want to select
-//string $select[] = `ls -sl`;
+
 //Find the bounding box of the selection by using the command exactWorldBoundingBox
 float $bBoxMaxMint[] = `exactWorldBoundingBox`;
 
@@ -7,13 +7,8 @@ float $bBoxMaxMint[] = `exactWorldBoundingBox`;
 float $xPosWldLoct = (($bBoxMaxMint[0] + $bBoxMaxMint[3])/ 2);
 float $yPosWldLoct = (($bBoxMaxMint[1] + $bBoxMaxMint[4])/ 2);
 float $zPosWldLoct = (($bBoxMaxMint[2] + $bBoxMaxMint[5])/ 2);
-print $bBoxMaxMint[0];
 
-//float $yPosWorldLocator = (($bBoxMaxMin[1] + $bBoxMaxMin[4])/ 2);
-//float $zPosWorldLocator = (($bBoxMaxMin[2] + $bBoxMaxMin[5])/ 2);
-//string $xPosWldLocStr = "$xPosWldLoc";
 //Make a locator at the found point
 select -cl;
-//spaceLocator -p $xPosWorldLocator $yPosWorldLocator $zPosWorldLocator;
 spaceLocator -p 0 0 0;
-xform -t $xPosWldLoct $xPosWldLoct $xPosWldLoct;
+xform -t $xPosWldLoct $yPosWldLoct $zPosWldLoct;
