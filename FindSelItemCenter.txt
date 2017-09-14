@@ -12,3 +12,4 @@ float $zPosWldLoct = (($bBoxMaxMint[2] + $bBoxMaxMint[5])/ 2);
 select -cl;
 spaceLocator -p 0 0 0;
 xform -t $xPosWldLoct $yPosWldLoct $zPosWldLoct;
+//You should also make a switch so that if makes a locator at the center of each selected item
