@@ -1,31 +1,44 @@
-int $howManyJoints = 6;
-
-for ($i = 0; $i < $howManyJoints; $i++)
+proc MakeFK(int $howManyJoints)
 {
+    //This for loop creates the joints
+    for ($i = 0; $i < $howManyJoints; $i++)
+    {
+        
+        joint -p $i 0 0 ;
+        string $selectJnt[] = `ls -sl`;
+    }
+    //This for loop creates the nurb circles
+    for ($i = 0; $i < $howManyJoints; $i++)
+    {
+        
+        circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1;
     
-    joint -p $i 0 0 ;
-
-}
-
-for ($i = 0; $i < $howManyJoints; $i++)
-{
+        move -r $i 0 0 ;
     
-    circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1;
+        rotate -r -os -fo 180 0 90 ;
+        string $selectCtr[] = `ls -sl`;
+    }
+    //This for loop creates the empty groups
+    for ($i = 0; $i < $howManyJoints; $i++)
+    {
+        CreateEmptyGroup;
+        move -r $i 0 0 ;
+        
+        string $dumpGrp = ;
+        
+        string $selectGrp[$i] = $dumpGrp;
+        
+        print $selectGrp[0];
+        //print $selectGrp[1];
+        //print $selectGrp[2];
 
-    move -r $i 0 0 ;
-
-    rotate -r -os -fo 180 0 90 ;
-
+        
+        //select -r nurbsCircle1 ;
+        //select -add null1 ;
+        //parent;
+    }
+    
 }
+MakeFK(3);
 
-for ($i = 0; $i < $howManyJoints; $i++)
-{
-    CreateEmptyGroup;
-    move -r $i 0 0 ;
-}
-
-select -all;
-makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 -pn 1;
-
-connectAttr -f nurbsCircle1.rotate joint1.rotate;
-connectAttr -f joint1.jointOrient null1.rotate;
+//you are trying to get the objects to populate into unique arrays so that you can select and group the items in the scene
