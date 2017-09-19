@@ -1,0 +1,39 @@
+proc MakeFKItems()
+{
+    string $selections[] = `ls -sl`;
+    
+    int $numItemsSel = size($selections);
+    
+    for ($i = 0; $i < $numItemsSel; $i++)
+    {
+        circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1;
+        //string $circle[] = `ls -o`;
+        float $jointPos[] = `xform -q -ws -t $selections[$i]`;
+        
+        //print $circle[0];
+        
+        move $jointPos[0] $jointPos[1] $jointPos[2];
+        
+        CreateEmptyGroup;
+        move $jointPos[0] $jointPos[1] $jointPos[2];
+        
+        string $circleName = "nurbsCircle" + ($i + 1);
+        string $groupName = "null" + ($i + 1);
+        
+        select -r $circleName;
+        select -add $groupName;
+        parent;
+        
+        if (`objExists nurbsCircle2`)
+        {
+        $circleName = "nurbsCircle" + $i;
+        
+        select -r $groupName;
+        select -add $circleName;
+        parent;
+        }
+        
+    }
+
+}
+MakeFKItems();

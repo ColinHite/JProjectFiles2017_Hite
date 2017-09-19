@@ -42,3 +42,51 @@ proc MakeFK(int $howManyJoints)
 MakeFK(3);
 
 //you are trying to get the objects to populate into unique arrays so that you can select and group the items in the scene
+---------------------------------
+//New script idea
+proc MakeFK(int $howManyJoints)
+{
+    string $selectGrp[];
+    string $selectCtr[];
+    //This for loop creates the joints
+    for ($i = 0; $i < $howManyJoints; $i++)
+    {
+
+        circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1;
+    
+        move -r $i 0 0 ;
+    
+        rotate -r -os -fo 180 0 90 ;
+        string $dumpCtr;
+        
+        $selectCtr[$i] = $dumpCtr;
+
+
+
+        CreateEmptyGroup;
+        move -r $i 0 0 ;
+        
+        string $dumpGrp;
+        
+        $selectGrp[$i] = $dumpGrp;
+        select -cl  ;
+        
+        
+        
+    }
+    
+    //string $nurbsItem = "nurbsCircle" + $i;
+    
+    for ($i = 0; $i < $howManyJoints; $i++)
+    {
+        string $nurbsItem = "nurbsCircle" + $i;
+        string $groupItem = "null" + $i;
+        select -r $nurbsItem; ;
+        select -add $groupItem ;
+        parent;
+        }
+    //print $selectGrp[0];
+}
+MakeFK(3);
+
+//you are trying to get the objects to populate into unique arrays so that you can select and group the items in the scene
