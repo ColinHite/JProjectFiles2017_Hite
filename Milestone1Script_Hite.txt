@@ -1,34 +1,53 @@
+//This procedutre requires the MakeFKItems script provided below this procedure
+//This proc checks for existing group nodes and creates new ones in the case of their absence.
+//It takes one argument which should correspond to the name of which you would like the FK items to be named
+//There are no other requirements for this procedure
 proc CheckGrps(string $ObjectName)
 {
-if (`objExists jnt_Skeleton_Group`)
-{
-    MakeFKItems($ObjectName);
-    select -r ($ObjectName + "_1_jnt");
-    select -add jnt_Skeleton_Group;
-    parent;
-}    
-if (`objExists ($ObjectName + "_Ctrl_Group")`)
-{
-    select -r ($ObjectName + "_1_group");
-    select -add ($ObjectName + "_Ctrl_Group");
-    parent;
-}
-else
-{ 
-MakeFKItems($ObjectName);
-group -name "jnt_Skeleton_Group" ($ObjectName + "_1_jnt");
-group -name ($ObjectName + "_Ctrl_Group") ($ObjectName + "_1_group");
-group -name ($ObjectName + "_FK") ($ObjectName + "_Ctrl_Group") "jnt_Skeleton_Group";
-}
-
-select -r -hi ($ObjectName + "_1_group");
-
-string $hideVisSels[] = `ls -sl`;
-for ($i = 0; $i < size($hideVisSels); $i++) 
-{
-    setAttr -lock true -keyable false -channelBox false ($hideVisSels[$i] + ".v");
-}
-}
+    //This if statement checks for an existing joint group
+    if (`objExists "Skeleton"`)
+    {
+        //If it does exist then the make FK script runs
+        MakeFKItems($ObjectName);
+        
+        //It then selects the group it was testing for and adds the new joint chain to it
+        select -r ($ObjectName + "_1_jnt");
+        select -add "Skeleton";
+        parent;
+    }//End if
+    
+    //This if statement checks for an overall control group
+    if (`objExists "Controls"`)
+    {
+        //If it exists then it adds the newly made group to the existing one
+        select -r ($ObjectName + "_1_group");
+        select -add "Controls";
+        parent;
+    }//End if
+    
+    //If the groups dont already exist then the proc runs the script and makes the apropriate group nodes
+    else
+    { 
+        MakeFKItems($ObjectName);
+        group -name "Skeleton" ($ObjectName + "_1_jnt");
+        group -name "Controls" ($ObjectName + "_1_group");
+        group -name "Asset" "Controls" "Skeleton";
+    }//End else
+    
+    //This line selects the newly created group from the make FK script
+    select -r -hi ($ObjectName + "_1_group");
+    
+    //These lines then lock and hide the visibility of those groups
+    string $hideVisSels[] = `ls -sl`;
+    for ($i = 0; $i < size($hideVisSels); $i++) 
+    {
+        setAttr -lock true -keyable false -channelBox false ($hideVisSels[$i] + ".v");
+    }
+    
+    //These lines then add the joint chain that was handled and deletes the history of all the affected objects in the Make Fk script
+    select -add -hi ($ObjectName + "_1_jnt");
+    delete -all -constructionHistory;
+}//End CheckGrps
 
 //This is the MakeFKItems script
 //It takes one argument which is used to rename the involved FK parts to the supplied string
@@ -78,10 +97,8 @@ proc MakeFKItems(string $ObjectName)
         //These lines select the order of control to joint and then creates the parent contraint for the control
         select -r $circleName;
         select -add $selections[$i];
-        doCreateParentConstraintArgList 1 { "1","0","0","0","0","0","0","1","","1" };
         parentConstraint -mo -weight 1;
         //These lines create a scale constraint for the control
-        doCreateScaleConstraintArgList 1 { "0","1","1","1","0","0","0","1","","1" };
         scaleConstraint -offset 1 1 1 -weight 1;
         
         //If the joint chain is longer than 1 
@@ -109,6 +126,4 @@ proc MakeFKItems(string $ObjectName)
     }//End for loop
 }//End MakeFKItems
 
-
-
-CheckGrps("Arm");
+CheckGrps("leg");
