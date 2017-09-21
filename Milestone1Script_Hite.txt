@@ -1,29 +1,82 @@
-proc MakeFKItems()
+proc CheckGrps(string $ObjectName)
 {
+if (`objExists jnt_Skeleton_Group`)
+{
+    MakeFKItems($ObjectName);
+    select -r ($ObjectName + "_1_jnt");
+    select -add jnt_Skeleton_Group;
+    parent;
+}    
+if (`objExists ($ObjectName + "_Ctrl_Group")`)
+{
+    select -r ($ObjectName + "_1_group");
+    select -add ($ObjectName + "_Ctrl_Group");
+    parent;
+}
+else
+{ 
+MakeFKItems($ObjectName);
+group -name "jnt_Skeleton_Group" ($ObjectName + "_1_jnt");
+group -name ($ObjectName + "_Ctrl_Group") ($ObjectName + "_1_group");
+group -name ($ObjectName + "_FK") ($ObjectName + "_Ctrl_Group") "jnt_Skeleton_Group";
+}
+}
+
+//This is the MakeFKItems script
+//It takes one argument which is used to rename the involved FK parts to the supplied string
+
+//To use this script select the root joint of any single string of joints
+//The script will then create an FK system that supplies a control to each joint
+proc MakeFKItems(string $ObjectName)
+{  
+    //These lines select all the joints in the hierarchy and add them to a string array
+    select -hi;
     string $selections[] = `ls -sl`;
-    
+    //This line creates an int value based on how many joints are in the chain
     int $numItemsSel = size($selections);
-    
+
+    //This for loop is the main constructor for the controls groups and positions of each object.
+    //It runs the same number of times as the number of joints in the selected chain
     for ($i = 0; $i < $numItemsSel; $i++)
     {
-        circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1;
-        //string $circle[] = `ls -o`;
-        float $jointPos[] = `xform -q -ws -t $selections[$i]`;
-        
-        //print $circle[0];
-        
-        move $jointPos[0] $jointPos[1] $jointPos[2];
-        
-        CreateEmptyGroup;
-        move $jointPos[0] $jointPos[1] $jointPos[2];
-        
+        //These lines define the created controls and groups respectivly for use in reference to parenting
         string $circleName = "nurbsCircle" + ($i + 1);
         string $groupName = "null" + ($i + 1);
         
+        //These lines fine the postion and orientation of the selected joints
+        float $jointPos[] = `xform -q -ws -t $selections[$i]`;
+        float $jointOrient[] = `joint -q -o $selections[$i]`;
+        
+        //This line creates the control
+        circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1;
+   
+        //This line moves the control to the respective joint
+        move $jointPos[0] $jointPos[1] $jointPos[2];
+        
+        //These lines create and postion the groups for the FK system
+        CreateEmptyGroup;
+        move $jointPos[0] $jointPos[1] $jointPos[2];
+        rotate $jointOrient[0] $jointOrient[1] $jointOrient[2];
+        
+        //These lines select the first control and group and parent them together
         select -r $circleName;
         select -add $groupName;
         parent;
         
+        //The control's transformations are then frozen for clarity with respect to animation
+        select -r $circleName;
+        makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 -pn 1;
+        
+        //These lines select the order of control to joint and then creates the parent contraint for the control
+        select -r $circleName;
+        select -add $selections[$i];
+        doCreateParentConstraintArgList 1 { "1","0","0","0","0","0","0","1","","1" };
+        parentConstraint -mo -weight 1;
+        //These lines create a scale constraint for the control
+        doCreateScaleConstraintArgList 1 { "0","1","1","1","0","0","0","1","","1" };
+        scaleConstraint -offset 1 1 1 -weight 1;
+        
+        //If the joint chain is longer than 1 
         if (`objExists nurbsCircle2`)
         {
         $circleName = "nurbsCircle" + $i;
@@ -31,9 +84,23 @@ proc MakeFKItems()
         select -r $groupName;
         select -add $circleName;
         parent;
-        }
+        }       
+    }//End For loop
+    
+    //This for loop renames the objects assosiated with the FK system
+    for ($i = 0; $i < $numItemsSel; $i++)
+    {
+        //These define what the current name of the controls and groups that need to be renamed are
+        string $circleName = "nurbsCircle" + ($i + 1);
+        string $groupName = "null" + ($i + 1);
         
-    }
+        //These lines rename the group, control, and joints respectivly
+        rename $groupName ($ObjectName + "_" + ($i + 1) + "_group");
+        rename $circleName ($ObjectName + "_" + ($i + 1) + "_ctrl");
+        rename $selections[$i] ($ObjectName + "_" + ($i + 1) + "_jnt");
+    }//End for loop
+}//End MakeFKItems
 
-}
-MakeFKItems();
+
+
+CheckGrps("Arm");
