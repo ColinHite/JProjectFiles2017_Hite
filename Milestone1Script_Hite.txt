@@ -20,6 +20,14 @@ group -name "jnt_Skeleton_Group" ($ObjectName + "_1_jnt");
 group -name ($ObjectName + "_Ctrl_Group") ($ObjectName + "_1_group");
 group -name ($ObjectName + "_FK") ($ObjectName + "_Ctrl_Group") "jnt_Skeleton_Group";
 }
+
+select -r -hi ($ObjectName + "_1_group");
+
+string $hideVisSels[] = `ls -sl`;
+for ($i = 0; $i < size($hideVisSels); $i++) 
+{
+    setAttr -lock true -keyable false -channelBox false ($hideVisSels[$i] + ".v");
+}
 }
 
 //This is the MakeFKItems script
