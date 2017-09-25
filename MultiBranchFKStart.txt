@@ -1,0 +1,48 @@
+int $input = 10;
+string $walkRight[];
+string $walkDown[];
+
+for ($i = 0; $i < $input; $i++)
+{
+       pickWalk -d down;
+       
+       pickWalk -d right;
+       string $walkBuff[] = `ls -sl`;
+       $walkRight[$i] = $walkBuff[0];
+       
+}
+
+select -r "joint1";
+
+for ($i = 0; $i < $input; $i++)
+{
+       pickWalk -d down;
+       
+       string $walkBuff[] = `ls -sl`;
+       $walkDown[$i] = $walkBuff[0];
+       
+}
+//for ($j = 0; $j < 1; $j++)
+//{
+    for ($i = 0; $i < $input; $i++)
+    {
+        if($walkDown[$i] == $walkRight[$i])
+        {
+            $walkDown[$i] = $walkDown[$i + 1];
+            $walkRight[$i] = $walkRight[$i + 1];
+            print $walkDown[$i];
+            print $walkRight[$i];
+            print "_";
+        }
+        
+    }
+    print "-";
+//}
+for ($i = 0; $i < $input; $i++)
+{
+    
+        //print $walkDown[$i];
+}
+select -r $walkDown[4];
+select -add $walkDown[4];
+//pickWalk

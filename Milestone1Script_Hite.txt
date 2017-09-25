@@ -4,12 +4,10 @@
 //There are no other requirements for this procedure
 proc CheckGrps(string $ObjectName)
 {
-    //This if statement checks for an existing joint group
-    if (`objExists "Skeleton"`)
-    {
-        //If it does exist then the make FK script runs
-        MakeFKItems($ObjectName);
-        
+    MakeFKItems($ObjectName);
+    //This if statement checks for an existing joint group and if the joint group is already parented then it bypasses what would cause an error
+    if (`objExists "Skeleton"` && isParentOf("Skeleton", ($ObjectName + "_1_jnt")) == false)
+    {           
         //It then selects the group it was testing for and adds the new joint chain to it
         select -r ($ObjectName + "_1_jnt");
         select -add "Skeleton";
@@ -28,7 +26,6 @@ proc CheckGrps(string $ObjectName)
     //If the groups dont already exist then the proc runs the script and makes the apropriate group nodes
     else
     { 
-        MakeFKItems($ObjectName);
         group -name "Skeleton" ($ObjectName + "_1_jnt");
         group -name "Controls" ($ObjectName + "_1_group");
         group -name "Asset" "Controls" "Skeleton";
@@ -36,6 +33,9 @@ proc CheckGrps(string $ObjectName)
     
     //This line selects the newly created group from the make FK script
     select -r -hi ($ObjectName + "_1_group");
+    
+    //This adds a display layer for the controls
+    createDisplayLayer -name "Controls_Group" -number 1 -nr; 
     
     //These lines then lock and hide the visibility of those groups
     string $hideVisSels[] = `ls -sl`;
@@ -47,6 +47,10 @@ proc CheckGrps(string $ObjectName)
     //These lines then add the joint chain that was handled and deletes the history of all the affected objects in the Make Fk script
     select -add -hi ($ObjectName + "_1_jnt");
     delete -all -constructionHistory;
+    
+    //These lines create a display layer for the joints
+    select -d -hi ($ObjectName + "_1_group");
+    createDisplayLayer -name "Joints" -number 1 -nr;
 }//End CheckGrps
 
 //This is the MakeFKItems script
@@ -61,6 +65,7 @@ proc MakeFKItems(string $ObjectName)
     string $selections[] = `ls -sl`;
     //This line creates an int value based on how many joints are in the chain
     int $numItemsSel = size($selections);
+
 
     //This for loop is the main constructor for the controls groups and positions of each object.
     //It runs the same number of times as the number of joints in the selected chain
@@ -101,15 +106,31 @@ proc MakeFKItems(string $ObjectName)
         //These lines create a scale constraint for the control
         scaleConstraint -offset 1 1 1 -weight 1;
         
-        //If the joint chain is longer than 1 
-        if (`objExists nurbsCircle2`)
-        {
-        $circleName = "nurbsCircle" + $i;
         
-        select -r $groupName;
-        select -add $circleName;
-        parent;
-        }       
+        
+        //If the joint chain is longer than 1 
+        if (`objExists nurbsCircle2` && isParentOf($selections[$i - 1], $selections[$i]) == true)
+        {
+            $circleName = "nurbsCircle" + $i;
+            
+            select -r $groupName;
+            select -add $circleName;
+            parent;
+            
+        }
+        
+        //if the last satement isnt true then add these to the last group
+        else
+        {
+
+            //$circleName = "nurbsCircle" + $thing;
+            
+            //select -r $groupName;
+            //select -add $circleName;
+            //parent;
+            
+        }
+              
     }//End For loop
     
     //This for loop renames the objects assosiated with the FK system

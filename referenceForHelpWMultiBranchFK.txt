@@ -1,0 +1,31 @@
+proc duplicateHierarchy (string $node, string $nodeParent)
+{
+    //This line makes the locator 
+    string $newLoc[] = `spaceLocator -n ($node + "_locator")`;
+    
+    if (`size $nodeParent` !=0)
+    {
+        parent ($newLoc[0], $nodeParent);
+    }
+ 
+    string $children[] = `listRelatives -c $node`;
+    //print $children;
+    //print `size $children`;
+    
+    
+    if (`size $children` !=0)
+    {
+        
+        for ($each in $children)
+        {
+        //print ($each);
+            duplicateHierarchy($each, $newLoc[0]);
+            //print $count;
+        }
+    }
+
+}
+string $sel[] = `ls -sl`;
+string $first = $sel[0];
+string $null;
+duplicateHierarchy ($first,$null);
