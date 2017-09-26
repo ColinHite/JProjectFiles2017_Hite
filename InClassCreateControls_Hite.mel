@@ -1,0 +1,45 @@
+global proc CreateControl(string $type, string $name)
+{
+    //typer: circle, square, cube
+    
+    //This is the make window block
+    string $window = "ctrlWindow";
+
+    if (`window -exists $window` == true)
+    {
+        deleteUI -window $window;
+    }
+    
+    $window = `window -title "Hey There" $window`;
+    columnLayout;
+    button;
+    button;
+    button;
+    
+    
+    showWindow();
+    //This is the end of the make window block
+    
+    string $ctrl;
+    
+    if($type == "circle")
+    {
+        //This is a circle
+        string $tCtrl[] = `circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1`;
+        $ctrl = $tCtrl[0];
+    }
+    else if($type == "square")
+    {
+        //this is a square nurb
+        $ctrl = `curve -d 1 -p -1 0 -1 -p 1 0 -1 -p 1 0 1 -p -1 0 1 -p -1 0 -1 -k 0 -k 1 -k 2 -k 3 -k 4`;
+    }
+    
+    else if ($type == "cube")
+    {
+        //This is a cube
+        $ctrl = `curve -d 1 -p -0.5 0.5 0.5 -p 0.5 0.5 0.5 -p 0.5 0.5 -0.5 -p -0.5 0.5 -0.5 -p -0.5 0.5 0.5 -p -0.5 -0.5 0.5 -p 0.5 -0.5 0.5 -p 0.5 0.5 0.5 -p 0.5 0.5 -0.5 -p 0.5 -0.5 -0.5 -p 0.5 -0.5 0.5 -p -0.5 -0.5 0.5 -p -0.5 -0.5 -0.5 -p 0.5 -0.5 -0.5 -p 0.5 0.5 -0.5 -p -0.5 0.5 -0.5 -p -0.5 -0.5 -0.5 -k 0 -k 1 -k 2 -k 3 -k 4 -k 5 -k 6 -k 7 -k 8 -k 9 -k 10 -k 11 -k 12 -k 13 -k 14 -k 15 -k 16`;
+    }
+    
+    $ctrl = `rename $ctrl $name`;
+    delete -ch $ctrl;
+}

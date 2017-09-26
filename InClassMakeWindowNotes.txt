@@ -1,0 +1,13 @@
+On top of the information about scripting today there are a few other things to note that I have here.
+
+For instance if you want to use the source comand the script needs to be in the documents maya folder under scripts, the 2017 is by version and the other is all versions.
+
+The source command also uses the name of the file not the script.
+
+Here is the code
+------------------
+source InClassCreateControls_Hite;
+CreateControl("square","test");
+------------------
+I missed the part where he was able to make the window with the buttons but I can imagine that you have to call the function when you press the button like
+	in the last scripting class you had.
