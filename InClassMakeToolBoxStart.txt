@@ -1,0 +1,23 @@
+global proc CreateToolBox()
+{
+    string $MWindowName = "myToolBox";
+    
+    if (`window -exists $MWindowName`)
+    {
+        deleteUI -window $MWindowName;
+    }
+ 
+    $MWindowName = `window $MWindowName`;
+    $mColLayout = `columnLayout -parent $MWindowName`;
+    $ctrlBtn = `button -label "Controls" -c "ControlsBtn()"`;
+ 
+    showWindow($MWindowName);
+}
+
+global proc ControlsBtn()
+{
+    source InClassCreateControls_Hite;
+    MakeControlWin();
+}
+
+CreateToolBox();

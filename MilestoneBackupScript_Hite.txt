@@ -34,8 +34,15 @@ proc CheckGrps(string $ObjectName)
     //This line selects the newly created group from the make FK script
     select -r -hi ($ObjectName + "_1_group");
     
+    if (`objExists "Controls_Group"`)
+    {
+        editDisplayLayerMembers -noRecurse Controls_Group `ls -selection`;
+    }
+    else
+    {
     //This adds a display layer for the controls
     createDisplayLayer -name "Controls_Group" -number 1 -nr; 
+    }
     
     //These lines then lock and hide the visibility of those groups
     string $hideVisSels[] = `ls -sl`;
@@ -50,7 +57,16 @@ proc CheckGrps(string $ObjectName)
     
     //These lines create a display layer for the joints
     select -d -hi ($ObjectName + "_1_group");
-    createDisplayLayer -name "Joints" -number 1 -nr;
+    
+    if (`objExists "Joints"`)
+    {
+        editDisplayLayerMembers -noRecurse Joints `ls -selection`;
+    }
+    else
+    {
+        //This adds a display layer for the joints
+        createDisplayLayer -name "Joints" -number 1 -nr;
+        }
 }//End CheckGrps
 
 //This is the MakeFKItems script
@@ -147,4 +163,4 @@ proc MakeFKItems(string $ObjectName)
     }//End for loop
 }//End MakeFKItems
 
-CheckGrps("leg");
+CheckGrps("arm");
