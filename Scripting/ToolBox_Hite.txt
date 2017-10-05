@@ -13,7 +13,7 @@ global proc MakeToolBox()
     $columnLayout = `columnLayout -parent $mainWin`;
     $renameBtn = `button -label "Rename Selection" /*-c ""`*/`;
     $centerLocatorBtn = `button -label "Find Center" -c "FindCenterBtn()"`;
-    $randomPlacementBtn = `button -label "Place Obj Random" /*-c ""`*/`;
+    $randomPlacementBtn = `button -label "Place Obj Random" -c "RenameSel()"`;
     $makeFKBtn = `button -label "Make Joints FK" /*-c ""`*/`;
     
     showWindow($mainWin);
@@ -25,4 +25,9 @@ global proc FindCenterBtn()
     FindCenter(0);
 }
 
+global proc RenameSel()
+{
+    source RenameBtn_Hite;
+    RenameSelect("Thing", "_geo");
+}
 MakeToolBox();

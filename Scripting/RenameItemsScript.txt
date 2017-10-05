@@ -1,10 +1,10 @@
-proc RenameSelect ()
+proc RenameSelect (string $nameOfThing, string $suffix)
 {
     string $select[] = `ls -sl`;
 
     for ($i = 0; $i < size($select); $i++)
     {
-        rename $select[$i] ("Thing_" + ($i + 1) + "_ctrl");
+        rename $select[$i] ($nameOfThing + "_" + ($i + 1) + "_" + $suffix);
     }
 }
-RenameSelect();
+//RenameSelect("Test", "ctrl");
