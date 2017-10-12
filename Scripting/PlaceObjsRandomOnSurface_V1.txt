@@ -1,0 +1,33 @@
+proc RandomCloud(int $numOfObjs)
+{
+    //This line takes the objects selected and makes them into an array
+    string $sels[] = `ls -sl`;
+    
+    //This line gets the number of verticies in the first selected object
+    int $objVertCounts[] = `polyEvaluate -v $sels[0]`;
+    
+    //This line is used to bypass errors in syntax for the next line. (possible fix)
+    string $planeName = ($sels[0] + ".vtx[0: " + $objVertCounts[0] + "]");
+    //This line selects all of the veticies in the first object selected
+    select -r $planeName ;
+    //This line then creats a variable to hold the 
+    string $planeVertSels[] = `ls -sl`;
+    
+    for ($i=0; $i<size($sels); $i++)
+    {
+        for ($j=0; $j<$numOfObjs; $j++)
+        {       
+                int $randomPlaneVert = `rand 0 ($objVertCounts[0])`;
+                string $firstSel = $sels[0] + ".vtx[" + $randomPlaneVert + "]";
+
+                
+                select -r $firstSel;
+                float $vertPos[] = `xform -q -ws -t`;
+                
+                string $obj[] = `duplicate -rr $sels[$i + 1]`;
+                
+                move $vertPos[0] $vertPos[1] $vertPos[2] $obj[0];
+        }
+    }
+}
+RandomCloud(10);

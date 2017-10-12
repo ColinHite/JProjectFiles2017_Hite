@@ -1,0 +1,32 @@
+proc RandomCloud(int $numOfObjs)
+{
+    //This line takes the objects selected and makes them into an array
+    string $sels[] = `ls -sl`;
+    
+    //This line gets the number of verticies in the first selected object
+    int $objVertCounts[] = `polyEvaluate -v $sels[0]`;
+    
+    //This first for loop accounts for multiple objects that need to be duplicated
+    //ie. it will so the operation for each object selected.
+    for ($i=0; $i<size($sels); $i++)
+    {
+        //This second operation makes the number of objects defined in the script call
+        for ($j=0; $j<$numOfObjs; $j++)
+        {       
+            //This line defines the randomly selected vert that the object will be moved to
+            int $randomPlaneVert = `rand 0 ($objVertCounts[0])`;
+            
+            //This line is used to bypass syntax errors for the next line. (possible fix) 
+            string $firstSel = $sels[0] + ".vtx[" + $randomPlaneVert + "]";
+            //This line selects the vert that was randomly decided
+            select -r $firstSel;
+            //Then the position data of the randomly decided and selected vert is created
+            float $vertPos[] = `xform -q -ws -t`;
+            
+            //The secondly selected object and prior are then duplicated
+            string $obj[] = `duplicate -rr $sels[$i + 1]`;
+            //And moved to the random vert's location
+            move $vertPos[0] $vertPos[1] $vertPos[2] $obj[0];
+        }//End For loop
+    }//End For loop
+}//End RandomCloud

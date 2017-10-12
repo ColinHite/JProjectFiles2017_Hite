@@ -1,0 +1,12 @@
+proc RenameSelect (string $nameOfThing, string $suffix)
+{
+    //Creates an array of the selected objects
+    string $select[] = `ls -sl`;
+    
+    //Runs for the size of the built array
+    for ($i = 0; $i < size($select); $i++)
+    {
+        //This line renames the items in "select"
+        rename $select[$i] ($nameOfThing + "_" + ($i + 1) + "_" + $suffix);
+    }
+}//End RenameSelect
