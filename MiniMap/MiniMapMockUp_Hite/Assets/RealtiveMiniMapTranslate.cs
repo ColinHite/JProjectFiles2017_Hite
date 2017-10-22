@@ -28,14 +28,20 @@ using UnityEngine;
 
 public class RealtiveMiniMapTranslate : MonoBehaviour {
 
-    //This object is the corresponding player or enemy
+    //These objects are the corresponding player or enemy
     //that will be mimicked on the minimap
-    public GameObject mini;
-    
+    public GameObject playerOneMini;
+    public GameObject playerTwoMini;
+    public GameObject playerThreeMini;
+    public GameObject playerFourMini;
+
     //This object is the Dino that will be represented on the minimap
     //Also this object is used to determine the parenting of the minimap object
-    public GameObject posPass;
-    
+    public GameObject playerOnePos;
+    public GameObject playerTwoPos;
+    public GameObject playerThreePos;
+    public GameObject playerFourPos;
+
     //This object is the minimap assosiated with the player dino
     public GameObject miniMap;
 
@@ -44,9 +50,29 @@ public class RealtiveMiniMapTranslate : MonoBehaviour {
     private float factorTwo;
 
     //These lines represent the factorized possition values of the player dino's possition
-    private float xPosPass;
-    private float yPosPass;
-    private float zPosPass;
+    private float playerOneXPos;
+    private float playerOneYPos;
+    private float playerOneZPos;
+
+    //These lines represent the factorized possition values of the player dino's possition
+    private float playerTwoXPos;
+    private float playerTwoYPos;
+    private float playerTwoZPos;
+
+    //These lines represent the factorized possition values of the player dino's possition
+    private float playerThreeXPos;
+    private float playerThreeYPos;
+    private float playerThreeZPos;
+
+    //These lines represent the factorized possition values of the player dino's possition
+    private float playerFourXPos;
+    private float playerFourYPos;
+    private float playerFourZPos;
+
+    //These floats represent the place at which the minimap resets itself after leaving the vacinity
+    public float xPosReset;
+    public float yPosReset;
+    public float zPosReset;
 
 
     void Start ()
@@ -54,45 +80,80 @@ public class RealtiveMiniMapTranslate : MonoBehaviour {
         //This line calculates the scaling factor of the minimap to the dinos
         //The factor is a method of 1:X "X" being the percentage of the original scale.
         //ie. if the map scale is 1 and the minimap is 0.1 then the factor derives a 10% relative value
-        factorTwo = mini.GetComponent<Transform>().lossyScale.x;
+        factorTwo = playerOneMini.GetComponent<Transform>().lossyScale.x;
     }//End Start
 	
 
 	void FixedUpdate ()
     {
-        //These lines calculate the factored translation values for the minimap version of the dino object
-        xPosPass = (factorTwo * (posPass.GetComponent<Transform>().position.x));
-        yPosPass = (factorTwo * (posPass.GetComponent<Transform>().position.y));
-        zPosPass = (factorTwo * (posPass.GetComponent<Transform>().position.z));
+        StartCoroutine("FindRealativePos");
 
-        //This line translates the dino representative on the minimap
-        mini.transform.localPosition = new Vector3(xPosPass, yPosPass, zPosPass);
-
-        //This is a mock action that activates the minimap
-        //(This can and should be changed in the final build)
-        if(Input.GetKeyDown("e"))
+        if (Input.GetKeyDown("e"))
         {
-            //This unparents the map from the player so that the player can walk around to see the map
-            miniMap.transform.parent = null;
-            
-            //These lines enable the meshrenderer of the minimap objects
-            miniMap.GetComponent<MeshRenderer>().enabled = true;
-            //This line turns the trigger collider of the minimap on so that a distance from the minimap can be derived
-            miniMap.GetComponent<Collider>().enabled = true;
-        }//End if statement
+            StartCoroutine ("CreateMiniMap");
+        }
     }//End Fixed Update
 
+    IEnumerator CreateMiniMap()
+    {
+            //This unparents the map from the player so that the player can walk around to see the map
+            miniMap.transform.parent = null;
+
+            //These lines enable the meshrenderer of the minimap objects
+            foreach (MeshRenderer rend in GetComponentsInChildren<MeshRenderer>())
+                rend.enabled = true;
+            //This line turns the trigger collider of the minimap on so that a distance from the minimap can be derived
+            miniMap.GetComponent<Collider>().enabled = true;
+
+        yield return new WaitForSeconds(0.1f);
+    }
+
+    IEnumerator FindRealativePos()
+    {
+        //These lines calculate the factored translation values for the minimap version of the dino object
+        playerOneXPos = (factorTwo * (playerOnePos.GetComponent<Transform>().position.x));
+        playerOneYPos = (factorTwo * (playerOnePos.GetComponent<Transform>().position.y));
+        playerOneZPos = (factorTwo * (playerOnePos.GetComponent<Transform>().position.z));
+
+        //These lines calculate the factored translation values for the minimap version of the dino object
+        playerTwoXPos = (factorTwo * (playerTwoPos.GetComponent<Transform>().position.x));
+        playerTwoYPos = (factorTwo * (playerTwoPos.GetComponent<Transform>().position.y));
+        playerTwoZPos = (factorTwo * (playerTwoPos.GetComponent<Transform>().position.z));
+
+        //These lines calculate the factored translation values for the minimap version of the dino object
+        playerThreeXPos = (factorTwo * (playerThreePos.GetComponent<Transform>().position.x));
+        playerThreeYPos = (factorTwo * (playerThreePos.GetComponent<Transform>().position.y));
+        playerThreeZPos = (factorTwo * (playerThreePos.GetComponent<Transform>().position.z));
+
+        //These lines calculate the factored translation values for the minimap version of the dino object
+        playerFourXPos = (factorTwo * (playerFourPos.GetComponent<Transform>().position.x));
+        playerFourYPos = (factorTwo * (playerFourPos.GetComponent<Transform>().position.y));
+        playerFourZPos = (factorTwo * (playerFourPos.GetComponent<Transform>().position.z));
+
+
+        //This line translates the dino representative on the minimap
+        playerOneMini.transform.localPosition = new Vector3(playerOneXPos, playerOneYPos, playerOneZPos);
+        playerTwoMini.transform.localPosition = new Vector3(playerTwoXPos, playerTwoYPos, playerTwoZPos);
+        playerThreeMini.transform.localPosition = new Vector3(playerThreeXPos, playerThreeYPos, playerThreeZPos);
+        playerFourMini.transform.localPosition = new Vector3(playerFourXPos, playerFourYPos, playerFourZPos);
+
+
+        return null;
+    }
 
     void OnTriggerExit()
     {
         //This reparents the minimap to the dino
-        miniMap.transform.parent = posPass.transform;
+        miniMap.transform.parent = playerOnePos.transform;
 
         //These lines turn the visuals of the map and its collider off
-        miniMap.GetComponent<MeshRenderer>().enabled = false;
+        foreach (MeshRenderer rend in GetComponentsInChildren<MeshRenderer>())
+            rend.enabled = false;
         miniMap.GetComponent<Collider>().enabled = false;
 
         //This line replaces the map relative to the player
-        miniMap.transform.localPosition = new Vector3(0, 0, 5);
+        miniMap.transform.localPosition = new Vector3(xPosReset, yPosReset, zPosReset);
+        miniMap.transform.localRotation = new Quaternion(0, 0, 0, 0);
+        StopCoroutine("CreateMiniMap");
     }//End OnTriggerExit
 }//End RealtiveMiniMapTranslate
