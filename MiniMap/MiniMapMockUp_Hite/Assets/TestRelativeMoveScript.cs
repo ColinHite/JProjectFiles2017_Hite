@@ -19,6 +19,6 @@ public class TestRelativeMoveScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        mini.transform.position = new Vector3(0, 0, (factorTwo * (posPass.GetComponent<Transform>().position.z)));
+        mini.transform.localPosition = new Vector3(0, 0, posPass.GetComponent<Transform>().position.z);
     }
 }
