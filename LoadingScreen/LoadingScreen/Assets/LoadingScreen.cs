@@ -11,6 +11,10 @@ public class LoadingScreen : MonoBehaviour {
     //This object is the image that acts as the mask for the shown dino image
     public GameObject loadingDino;
 
+    public int nextScene;
+
+    public int waitTime;
+
     //This block loads a corutine for loading the next level
     public void LoadEnvironment (int sceneIndex)
     {
@@ -35,5 +39,16 @@ public class LoadingScreen : MonoBehaviour {
             //This line waits one frame for the operation to complete 
             yield return null;
         }//End Whileloop
+        if (loadingNextScene.isDone)
+        {
+            yield return new WaitForSecondsRealtime(waitTime);
+            FinishLoading(nextScene);
+        }
     }//End LoadEnviCo
+
+    public void FinishLoading(int nextScene)
+    {
+        AsyncOperation loadingNextScene = SceneManager.LoadSceneAsync(nextScene);
+
+    }
 }//End LoadingScreen
