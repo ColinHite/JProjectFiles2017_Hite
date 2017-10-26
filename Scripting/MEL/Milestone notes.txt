@@ -1,0 +1,10 @@
+The milestone will be a script where you have to make an FK joint creator of any one chain length
+this will include all the empty groups
+the controls 
+and constraints
+with a skelington group
+that has all items renamed
+
+Milky Chance Stolen dance
+
+Muse Kights of cydonia

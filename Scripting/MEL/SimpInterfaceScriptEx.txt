@@ -1,0 +1,45 @@
+global proc MakeQuickRef()
+{
+    string $mainWin = "QuickRef";
+    
+    if (`window -exists $mainWin`)
+    {
+        deleteUI -window $mainWin;
+    }
+ 
+    $mainWin = `window $mainWin`;
+    $columnLayout = `columnLayout -parent $mainWin`;
+    $delHisBtn = `button -label "Delete History" -c "DelHis()"`;
+    $frzTranBtn = `button -label "Freeze Transformations" -c "FrezTrans()"`;
+    $centerPivBtn = `button -label "CenterPivot" -c "CenterPiv()"`;
+    $superParentBtn = `button -label "Super Parent" -c "SuperParent()"`;
+    
+    showWindow($mainWin);
+}
+
+global proc DelHis()
+{
+    delete -ch;
+}
+
+global proc FrezTrans()
+{
+    makeIdentity -apply true -t 1 -r 1 -s 1 -n 0 -pn 1;
+}
+global proc CenterPiv()
+{
+    xform -cpc;
+}
+global proc SuperParent()
+{
+    string $sels[] = `ls -sl`;
+    
+    doCreateParentConstraintArgList 1 { "1","0","0","0","0","0","0","0","1","","1" };
+    parentConstraint -mo -weight 1 $sels[0] $sels[1];
+
+    doCreateScaleConstraintArgList 1 { "0","1","1","1","0","0","0","1","","1" };
+    scaleConstraint -offset 1 1 1 -weight 1 $sels[0] $sels[1];
+
+}
+
+MakeQuickRef()

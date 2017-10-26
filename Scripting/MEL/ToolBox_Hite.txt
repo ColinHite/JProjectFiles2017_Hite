@@ -1,0 +1,43 @@
+global proc MakeToolBox()
+{
+    string $mainWin = "C.H. Tool Box";
+    
+    if (`window -exists $mainWin`)
+    {
+        deleteUI -window $mainWin;
+    }
+ 
+    $mainWin = `window $mainWin`;
+    $columnLayout = `columnLayout -parent $mainWin`;
+    $renameBtn = `button -label "Rename Selection" -c "RenameSel()"`;
+    $centerLocatorBtn = `button -label "Find Center" -c "FindCenterBtn()"`;
+    $randomPlacementBtn = `button -label "Place Obj Random" -c "RandSurfaceGen()"`;
+    $orientJntBtn = `button -label "Orient Joint" -c "ReorientJoint()"`;
+    
+    showWindow($mainWin);
+}
+
+global proc FindCenterBtn()
+{
+    source FindCenter_Hite;
+    FindCenter(0);
+}
+
+global proc RenameSel()
+{
+    source RenameItems_Hite;
+    RenameSelect("Thing", "_geo");
+}
+
+global proc RandSurfaceGen()
+{
+    source RandSurfacePop_Hite;
+    RandomCloud(10);
+}
+
+global proc ReorientJoint()
+{
+    source PointJnt_Hite;
+    pointJnt();
+}
+MakeToolBox();
