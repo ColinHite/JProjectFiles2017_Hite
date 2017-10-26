@@ -1,0 +1,122 @@
+import maya.cmds as cmds
+
+#def check_grps(objectName):
+
+    #MakeFKItems(objectName)
+    #This if statement checks for an existing joint group and if the joint group is already parented then it bypasses what would cause an error
+    #if (cmds.objExists ("Skeleton") && isParentOf("Skeleton", (objectName + "_1_jnt")) == false)):
+        #It then selects the group it was testing for and adds the new joint chain to it
+        #cmds.select (-r (objectName + "_1_jnt"))
+        #cmds.select (-add "Skeleton")
+        #cmds.parent
+    
+    #This if statement checks for an overall control group
+    #if (cmds.objExists ("Controls")):
+        #If it exists then it adds the newly made group to the existing one
+        #cmds.select (-r (objectName + "_1_group"))
+        #cmds.select (-add "Controls")
+        #cmds.parent
+    
+    #If the groups dont already exist then the proc runs the script and makes the apropriate group nodes
+    #else
+        #cmds.group (-name "Skeleton" (objectName + "_1_jnt"))
+        #cmds.group (-name "Controls" (objectName + "_1_group"))
+        #cmds.group (-name "Asset" "Controls" "Skeleton")
+    
+    #This line selects the newly created group from the make FK script
+    #cmds.select (-r -hi (objectName + "_1_group"))
+    
+    #if (cmds.objExists ("Controls_Group")):
+        #cmds.editDisplayLayerMembers (-noRecurse Controls_Group cmds.ls (-selection))
+    #else
+        #This adds a display layer for the controls
+        #cmds.createDisplayLayer (-name "Controls_Group" -number 1 -nr)
+    
+    #These lines then lock and hide the visibility of those groups
+    #string hideVisSels[] = cmds.ls (-sl)
+    #for (i = 0; i < size(hideVisSels); i++): 
+        #cmds.setAttr (-lock true -keyable false -channelBox false (hideVisSels[i] + ".v"))
+    
+    #These lines then add the joint chain that was handled and deletes the history of all the affected objects in the Make Fk script
+    #cmds.select (-add -hi (objectName + "_1_jnt"))
+    #cmds.delete (-all -constructionHistory)
+    
+    #These lines create a display layer for the joints
+    #cmds.select (-d -hi (objectName + "_1_group"))
+    
+    #if (cmds.objExists ("Joints")):
+        #cmds.editDisplayLayerMembers (-noRecurse Joints cmds.ls -selection)
+    #else
+        #This adds a display layer for the joints
+        #cmds.createDisplayLayer (-name "Joints" -number 1 -nr)
+        
+
+def MakeFKItems(objectName):
+    #These lines select all the joints in the hierarchy and add them to a string array
+    cmds.select (-hi)
+    string $selections[] = cmds.ls (-sl)
+    #This line creates an int value based on how many joints are in the chain
+    int numItemsSel = size(selections)
+
+
+    #This for loop is the main constructor for the controls groups and positions of each object.
+    #It runs the same number of times as the number of joints in the selected chain
+    for (i = 0; $i < numItemsSel; i++)
+        #These lines define the created controls and groups respectivly for use in reference to parenting
+        string circleName = "nurbsCircle" + (i + 1)
+        string groupName = "null" + (i + 1)
+        
+        #These lines fine the postion and orientation of the selected joints
+        float jointPos[] = cmds.xform (-q -ws -t selections[i])
+        float jointOrient[] = cmds.joint (-q -o selections[i])
+        
+        #This line creates the control
+        cmds.circle (-c 0 0 0 -nr 0 1 0 -sw 360 -r 1 -d 3 -ut 0 -tol 0.01 -s 8 -ch 1)
+   
+        #This line moves the control to the respective joint
+        cmds.move (jointPos[0] jointPos[1] jointPos[2])
+        
+        #These lines create and postion the groups for the FK system
+        cmds.CreateEmptyGroup
+        cmds.move (jointPos[0] jointPos[1] jointPos[2])
+        cmds.rotate (jointOrient[0] jointOrient[1] jointOrient[2])
+        
+        #These lines select the first control and group and parent them together
+        cmds.select (-r circleName)
+        cmds.select (-add groupName)
+        cmds.parent
+        
+        #The control's transformations are then frozen for clarity with respect to animation
+        cmds.select (-r circleName)
+        cmds.makeIdentity (-apply true -t 1 -r 1 -s 1 -n 0 -pn 1)
+        
+        #These lines select the order of control to joint and then creates the parent contraint for the control
+        cmds.select (-r circleName)
+        cmds.select (-add selections[i])
+        cmds.parentConstraint (-mo -weight 1)
+        #These lines create a scale constraint for the control
+        cmds.scaleConstraint (-offset 1 1 1 -weight 1)
+        
+        
+        
+        #If the joint chain is longer than 1 
+        if (cmds.objExists nurbsCircle2 && isParentOf(selections[$i - 1], selections[$i]) == true)
+            circleName = "nurbsCircle" + i
+           
+            cmds.select (-r groupName)
+            cmds.select (-add circleName)
+            cmds.parent
+    
+    #This for loop renames the objects assosiated with the FK system
+    for ($i = 0; $i < $numItemsSel; $i++)
+        #These define what the current name of the controls and groups that need to be renamed are
+        string circleName = "nurbsCircle" + (i + 1)
+        string groupName = "null" + (i + 1)
+        
+        #These lines rename the group, control, and joints respectivly
+        cmds.rename (groupName (objectName + "_" + (i + 1) + "_group"))
+        cmds.rename (circleName (objectName + "_" + (i + 1) + "_ctrl"))
+        cmds.rename (selections[i] (objectName + "_" + (i + 1) + "_jnt"))
+
+
+CheckGrps("arm")

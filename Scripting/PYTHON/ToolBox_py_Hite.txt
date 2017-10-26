@@ -1,57 +1,70 @@
 import maya.cmds as cmds
 
-def MakeToolBox():
-
-	mainWin = "C.H. Tool Box"
-
-	if (cmds.window (mainWin, exists = True)):
-		cmds.deleteUI (mainWin, window = True)
-		
-	#These lines only make the windows
-	mainWin = cmds.window (mainWin)
-	columnObj = cmds.columnLayout (parent = mainWin)
-
-	renameBtnNewName = cmds.textFieldGrp (parent = columnObj, label = "Rename Selection", placeholderText = "Enter a new name")
-	renameBtnNewSuffix = cmds.textFieldGrp (parent = columnObj, placeholderText = "Enter a new suffix")
-	renameBtn = cmds.button (parent = columnObj, label = "Rename Selection")
-
-	centerLocBtnBool = cmds.checkBox (parent = columnObj, label = "individual/whole")
-	centerLocatorBtn = cmds.button (parent = columnObj, label = "Find Center")
-
-	randPlaceBtnObjCnt = cmds.intField (parent = columnObj)
-	randomPlacementBtn = cmds.button (parent = columnObj, label = "Place Obj Random")
-
-	#orientJntBtn = cmds.button (parent = columnObj, label = "Orient Joint")
-
-	cmds.button (renameBtn, e = True, c = ("RenameSel(\"" + renameBtnNewName + "\", \"" + renameBtnNewSuffix + "\")") )
-	cmds.button (centerLocatorBtn, e = True, c = ("FindCenterBtn(\"" + centerLocBtnBool + "\")") )
-	cmds.button (randomPlacementBtn, e = True, c = ("RandSurfaceGen(\"" + randPlaceBtnObjCnt + "\")") )
-
-	cmds.showWindow(mainWin)
+def MakeFKItems(objectName):
+    #These lines select all the joints in the hierarchy and add them to a string array
+    cmds.select (hi = True)
+    selections = cmds.ls(sl = True)
+    #This line creates an int value based on how many joints are in the chain
+    numItemsSel = len(selections)
 
 
-def RenameSel(renameBtnNewName, renameBtnNewSuffix):
-	newName = cmds.textFieldGrp (renameBtnNewName, q = True, text = True)
-	suffix = cmds.textFieldGrp (renameBtnNewSuffix, q = True, text = True)
+    #This for loop is the main constructor for the controls groups and positions of each object.
+    #It runs the same number of times as the number of joints in the selected chain
+    for i in range(numItemsSel):
+        #These lines define the created controls and groups respectivly for use in reference to parenting
+        circleName = "nurbsCircle" + str(i + 1)
+        groupName = "null" + str(i + 1)
+        
+        #These lines fine the postion and orientation of the selected joints
+        jointPos = cmds.xform (selections[i], q = True, ws = True, t = True)
+        jointOrient = cmds.joint (selections[i], q = True, o = True)
+        
+        #This line creates the control
+        cmds.circle (c = (0, 0, 0), nr = (0, 1, 0), sw = 360, r = 1, d = 3, ut = 0, tol = 0.01, s = 8, ch = 1)
+   
+        #This line moves the control to the respective joint
+        cmds.move (jointPos[0], jointPos[1], jointPos[2])
+        
+        #These lines create and postion the groups for the FK system
+        cmds.group (em = True)
+        cmds.move (jointPos[0], jointPos[1], jointPos[2])
+        cmds.rotate (jointOrient[0], jointOrient[1], jointOrient[2])
+        
+        #These lines select the first control and group and parent them together
+        cmds.select (circleName, r =True )
+        cmds.select (groupName, add = True )
+        cmds.parent
+        
+        #The control's transformations are then frozen for clarity with respect to animation
+        cmds.select (circleName, r = True )
+        cmds.makeIdentity (apply = True, t = 1, r = 1, s = 1, n = 0, pn = 1)
+        
+        #These lines select the order of control to joint and then creates the parent contraint for the control
+        cmds.select (circleName, r = True)
+        cmds.select (selections[i], add = True )
+        cmds.parentConstraint (mo = True, weight = 1)
+        #These lines create a scale constraint for the control
+        cmds.scaleConstraint (offset = (1, 1, 1), weight = 1)
+        
+        #If the joint chain is longer than 1 
+        if (cmds.objExists ("nurbsCircle2")):
+            circleName = "nurbsCircle" + str(i)
+           
+            cmds.select (groupName, r = True )
+            cmds.select (circleName, add = True)
+            cmds.parent
+    
+    #This for loop renames the objects assosiated with the FK system
+    for i in range(numItemsSel):
+        iPass = i + 1
+        #These define what the current name of the controls and groups that need to be renamed are
+        circleName = "nurbsCircle" + str(iPass)
+        groupName = "null" + str(iPass)
+        
+        #These lines rename the group, control, and joints respectivly
+        cmds.rename (groupName ('%s_%i_group' % (objectName, iPass)))
+        cmds.rename (circleName (objectName + "_" + str(iPass) + "_ctrl"))
+        cmds.rename (selections[i] (objectName + "_" + iPass + "_jnt"))
 
-	import RenameItems_py_Hite as RI
-	RI.rename_select(newName, suffix)
 
-
-def FindCenterBtn(centerLocBtnBool):
-	onOff = cmds.checkBox (centerLocBtnBool, q = True, v = True)
-
-	import FindCenter_py_Hite as FC
-	FC.find_center(onOff)
-
-def RandSurfaceGen(randPlaceBtnObjCnt):
-	objCount = cmds.intField (randPlaceBtnObjCnt, q = True, v = True)
-
-	import RandSurfacePop_py_Hite as RSP
-	RSP.random_cloud(objCount)
-
-#global def ReorientJoint():
-#    source PointJnt_Hite
-#    pointJnt()
-
-MakeToolBox()
+MakeFKItems("arm")
