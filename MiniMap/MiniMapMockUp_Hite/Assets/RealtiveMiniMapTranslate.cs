@@ -52,12 +52,6 @@ public class RealtiveMiniMapTranslate : MonoBehaviour {
     {
         //This coroutine translates the mini dinos on the minimap
         StartCoroutine("FindRealativePos");
-
-        //This coroutine turns on the meshrenders of the minimap and its parts
-        if (Input.GetKeyDown("e"))
-        {
-            StartCoroutine ("CreateMiniMap");
-        }
     }//End Fixed Update
 
     //This moves the mini dinos on the minimap relative to the fullscale versions
@@ -75,7 +69,7 @@ public class RealtiveMiniMapTranslate : MonoBehaviour {
     //This turns the collider of the minimap on,
     //turns on the minimap's meshrenderer on,
     //and deparents the minimapGroup from the player
-    IEnumerator CreateMiniMap()
+    public void CreateMiniMap()
     {
         //These lines enable the meshrenderer of the minimap objects
         foreach (MeshRenderer rend in miniMap.GetComponentsInChildren<MeshRenderer>())
@@ -91,7 +85,7 @@ public class RealtiveMiniMapTranslate : MonoBehaviour {
         //This unparents the map from the player
         miniMap.transform.parent = null;
 
-        yield return new WaitForSeconds(0.1f);
+        //yield return new WaitForSeconds(0.1f);
     }//End CreateMiniMap
 
     void OnTriggerExit()
@@ -111,6 +105,5 @@ public class RealtiveMiniMapTranslate : MonoBehaviour {
         //This line replaces the map relative to the player
         miniMap.transform.localPosition = new Vector3(xPosReset, yPosReset, zPosReset);
         miniMap.transform.localRotation = new Quaternion(0, 0, 0, 0);
-        StopCoroutine("CreateMiniMap");
     }//End OnTriggerExit
 }//End RealtiveMiniMapTranslate
