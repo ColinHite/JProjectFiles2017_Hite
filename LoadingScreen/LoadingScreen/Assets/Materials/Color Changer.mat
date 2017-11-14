@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Color Changer
+  m_Shader: {fileID: 4800000, guid: 1b67ee46b80751f43901c260480f2d2c, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _ConstructColor:
+        m_Texture: {fileID: 2800000, guid: 577f6f481d2da004f96221f7ffeb6910, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ConstructTex:
+        m_Texture: {fileID: 2800000, guid: bf65e97256dfc6541b61b814bded40af, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 8778852ddca62754889c39821545fa32, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Amount: 1
+    - _Amplitude: 1
+    - _ClipRange: 0.26
+    - _ConstructY: 1.08
+    - _CutHight: 0.11
+    - _CutoutThresh: 0
+    - _Distance: 0
+    - _Glossiness: 1
+    - _Inverted: 0
+    - _Metallic: 1
+    - _Speed: 2.4
+    - _Transparency: 0.09
+    - _WireTransparency: 0.3
+    - _WireframeVal: 0.12
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _ConstructColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FrontColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TintColor: {r: 0.82590824, g: 0.8346647, b: 0.83823526, a: 1}

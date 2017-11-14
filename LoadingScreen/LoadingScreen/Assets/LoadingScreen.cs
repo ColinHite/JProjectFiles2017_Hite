@@ -8,8 +8,7 @@ using UnityEngine.UI;
 
 public class LoadingScreen : MonoBehaviour {
 
-    //This object is the image that acts as the mask for the shown dino image
-    public GameObject loadingDino;
+    public Renderer dino;
 
     public int nextScene;
 
@@ -20,6 +19,11 @@ public class LoadingScreen : MonoBehaviour {
     {
         StartCoroutine(LoadEnviCo(sceneIndex));
     }//End LoadEnvironment
+
+    void Start()
+    {
+        dino = GetComponent<Renderer>();
+    }
 
     //This corutine loads the next assigned indexed scene
     IEnumerator LoadEnviCo (int sceneIndex)
@@ -34,14 +38,16 @@ public class LoadingScreen : MonoBehaviour {
             float levelLoadedPercent = Mathf.Clamp01(loadingNextScene.progress / .9f);
 
             //This line transforms the mask image based on the load percentage
-            levelLoadedPercent = loadingDino.GetComponent<RectTransform>().rect.height;
+            dino.material.SetFloat("_ConstructY", levelLoadedPercent);
+
+            Debug.Log("It should have done something");
 
             //This line waits one frame for the operation to complete 
-            yield return null;
+            yield return new WaitForSecondsRealtime(waitTime);
         }//End Whileloop
         if (loadingNextScene.isDone)
         {
-            yield return new WaitForSecondsRealtime(waitTime);
+            //yield return new WaitForSecondsRealtime(waitTime);
             FinishLoading(nextScene);
         }
     }//End LoadEnviCo
