@@ -2,8 +2,6 @@ def MakeFK(objectName):
 	cmds.select (hi = True)
 	selections = cmds.ls (sl = True)
 	
-	cmds.parent(w = True)
-	
 	for i in range(len(selections)):
 		#These lines make the controls
 		controlNames = cmds.circle(name = (objectName + "_0" + str(i + 1) + "_ctrl"), c = (0, 0, 0), nr = (0, 1, 0), sw = 360, r = 1, d = 3, ut = 0, tol = 0.01, s = 8)
@@ -12,7 +10,7 @@ def MakeFK(objectName):
 		
 		#These lines get info about the joints
 		cmds.select(selections[i], r = True)
-		jointOri = cmds.joint(selections[i], q = True, o = True)
+		jointOri = cmds.xform(selections[i], q = True, ro = True, ws = True)
 		jointTrans = cmds.joint(selections[i], q = True, a = True, p = True)
 		
 		#These lines move the groups and adds their attributes
@@ -28,13 +26,10 @@ def MakeFK(objectName):
 		cmds.scaleConstraint(offset = (1, 1, 1), weight = 1)
 		
 		if(i != 0):
-			cmds.parent(selections[i], selections[i - 1])
 			cmds.parent((objectName + "_0" + str(i + 1) + "_grp"), (objectName + "_0" + str(i) + "_ctrl"))
-			
 	# This for loop connects the parent constraints to the BFK atrributes in the channel box
 	for l in range(len(selections)):
 		
-		cmds.select(cl = True)
 		cmds.select((objectName + "_0" + str(l + 1) + "_ctrl"), r = True)
 		cmds.delete(ch = True)
 
