@@ -1,80 +1,24 @@
-def MakeBFK(objectName):
-    cmds.select (hi = True)
-    selections = cmds.ls (sl = True)
+#In class multiConstraint script
+import maya.cmds as cmds
 
-    for i in range(len(selections)):
-        #These lines make the controls
-        controlNames = cmds.circle(name = (objectName + "_0" + str(i + 1) + "_ctrl"), c = (0, 0, 0), nr = (0, 1, 0), sw = 360, r = 1, d = 3, ut = 0, tol = 0.01, s = 8)
-        cmds.setAttr((objectName + "_0" + str(i + 1) + "_ctrl.v"), lock = True, keyable = False, channelBox = False)
-        cmds.addAttr(ln = "BFK_Trans", at = "double", min = 0, max = 1, dv = 1)
-        cmds.addAttr(ln = "BFK_Rot", at = "double", min = 0, max = 1, dv = 1)
-        groupNames = cmds.group(name = (objectName + "_0" + str(i + 1) + "_grp"))
+def every_other():
 
-        #These lines get info about the joints
-        cmds.select(selections[i], r = True)
-        jointOri = cmds.xform(selections[i], q = True, ro = True, ws = True)
-        jointTrans = cmds.joint(selections[i], q = True, a = True, p = True)
+    ###
+    ###
 
-        #These lines move the groups and adds their attributes
-        cmds.move(jointTrans[0], jointTrans[1], jointTrans[2], groupNames, ws = True)
-        cmds.rotate(jointOri[0], jointOri[1] ,jointOri[2], groupNames, ws = True)
+    #get selection array
+    sels = cmds.ls (sl = True)
+    #create a check for even number of array objects ie. control joint control joint...
+    if len(sels) % 2:
+        cmds.error("An odd number of nodes has been seleted. Please select an even number of nodes.")
+    #split the targets from the parents
+    targets = sels[0::2]
+    #constrain each pair
+    nodes = sels[1::2]
 
-        #These lines make the attribute visible in the channel box
-        cmds.setAttr((objectName + "_0" + str(i + 1) + "_grp|" + objectName + "_0" + str(i + 1) + "_ctrl.BFK_Trans"), e = True, keyable = True)
-        cmds.setAttr((objectName + "_0" + str(i + 1) + "_grp|" + objectName + "_0" + str(i + 1) + "_ctrl.BFK_Rot"), e = True, keyable = True)
+    for index, element in enumerate(targets):
+        cmds.parentConstraint(taregets[index], nodes[index])
 
-        #These lines parent constraint the controls to the joints in the chain
-        cmds.parentConstraint((objectName + "_0" + str(i + 1) + "_ctrl"), selections[i], mo = True, weight = 1)
-        cmds.scaleConstraint((objectName + "_0" + str(i + 1) + "_ctrl"), selections[i], offset = (1, 1, 1), weight = 1)
-
-        #If the first loop is taking place then create the master group and give the first set of controls their parent constraints
-        if(i == 0):
-            cmds.circle(name = (objectName + "_Master_ctrl"), c = (0, 0, 0), nr = (0, 1, 0), sw = 360, r = 2, d = 3, ut = 0, tol = 0.01, s = 8)
-            cmds.setAttr((objectName + "_Master_ctrl.v"), lock = True, keyable = False, channelBox = False)
-            cmds.delete(ch = True)
-            masterGrp = cmds.group(name = (objectName + "_Master_grp"))
-            cmds.move(jointTrans[0], jointTrans[1], jointTrans[2], masterGrp, ws = True)
-            cmds.rotate(jointOri[0], jointOri[1] ,jointOri[2], masterGrp, ws = True)
-            #This constraint is the translation one
-            cmds.parentConstraint((objectName + "_Master_ctrl"), (objectName + "_01_grp"), mo = True, skipRotate = ("x", "y", "z"), weight = 1)
-            #This constraint is the rotation one
-            cmds.parentConstraint((objectName + "_Master_ctrl"), (objectName + "_01_grp"), mo = True, skipTranslate = ("x", "y", "z"), weight = 1)
-            
-            cmds.connectAttr((objectName + "_0" + str(i + 1) + "_ctrl.BFK_Trans"), (objectName + "_0" + str(i + 1) + "_grp_parentConstraint1" + "." + objectName + "_Master_ctrlW0"), f = True) 
-            cmds.connectAttr((objectName + "_0" + str(i + 1) + "_ctrl.BFK_Rot"), (objectName + "_0" + str(i + 1) + "_grp_parentConstraint2" + "." + objectName + "_Master_ctrlW0"), f = True)
-
-        #if the current itteration is not the first itteration then make the parent constraints and reparent the joint chain
-        if(i != 0):
-			cmds.select((objectName + "_0" + str(i) + "_ctrl"), (objectName + "_0" + str(i + 1) + "_grp"), r = True)
-			#This constraint is the translation one
-			cmds.parentConstraint(mo = True, skipRotate = ("x", "y", "z"), weight = 1)
-			#This constraint is the rotation one
-			cmds.parentConstraint(mo = True, skipTranslate = ("x", "y", "z"), weight = 1)
-
-			cmds.connectAttr((objectName + "_0" + str(i + 1) + "_ctrl.BFK_Trans"), (objectName + "_0" + str(i + 1) + "_grp_parentConstraint1" + "." + objectName + "_0" + str(i) + "_ctrlW0"), f = True)
-			cmds.connectAttr((objectName + "_0" + str(i + 1) + "_ctrl.BFK_Rot"), (objectName + "_0" + str(i + 1) + "_grp_parentConstraint2" + "." + objectName + "_0" + str(i) + "_ctrlW0"), f = True) 
-
-        cmds.rename(selections[i], (objectName + "_0" + str(i + 1) + "_jnt"))
-
-        #These lines clear the history of the controls
-        cmds.select((objectName + "_0" + str(i + 1) + "_ctrl"), r = True)
-        cmds.delete(ch = True)
-
-	# These lines make the Controls group with the master control first and the BFK chain second in its own group
-	cmds.select(cl = True)
-	for j in range(len(selections)):
-		cmds.select((objectName + "_0" + str(j + 1) + "_grp"), add = True)
-	cmds.group(name = (objectName + "_ctrl_grp"))
-	cmds.select((objectName + "_Master_grp"), (objectName + "_ctrl_grp"), r = True)
-	#This if statement handles the scene parenting structure for the Controls group
-	if (cmds.objExists("Controls")):
-		cmds.parent((objectName + "_Master_grp"), (objectName + "_ctrl_grp"), "Controls")
-	else:
-		cmds.group(name = "Controls")
-
-	#This if statement handles the scene parenting structure for the joints group
-	if (cmds.objExists("Joints")):
-		cmds.parent(selections[0], "Joints")
-    else:
-        cmds.group(selections[0], name = "Joints")	
-MakeBFK("Arm")
+    cmds.select(targets, r = True)
+every_other():
+    #this should work but youll have to get it working somehow
