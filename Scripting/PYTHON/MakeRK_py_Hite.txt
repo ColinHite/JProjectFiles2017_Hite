@@ -1,0 +1,22 @@
+import maya.cmds as cmds
+
+def make_rk():
+    sels = cmds.ls (sl = True)
+    #The idea so far is to select the Rk then the IK then the Fk then the control last
+    # ie.sels = Rk1, Rk2, Rk3, Ik1, Ik2, Ik3, Fk1, Fk2, Fk3, Transform_ctrl
+    
+    #asign what the last item is as the control
+    Master_ctrl = sels[-1]
+    
+    #clear the last item in the selection
+    sels[-1] = null
+    
+    #make the parent constraints to the RK system
+    
+        #in this case we need to run it three times 1/3 of the total number of items in the sels after nulling the last item
+    
+    #Make the attribute on the master control
+    
+    #create the connections from the master control to the parent constraints
+    
+    # create the visibilty switch for the controls ie the connection
