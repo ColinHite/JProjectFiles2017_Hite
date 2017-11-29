@@ -14,6 +14,8 @@ def make_rk():
     #This so far is only clearing the space not the number of items on the list
     #sels[-1] = null
     
+    #Made change for git
+	
     #Make the attribute on the master control
     cmds.addAttr (Master_ctrl, ln = "RK_Switch", at = "double", min = 0, max = 1, dv = 0)
     cmds.setAttr ((str(Master_ctrl) + ".RK_Switch"), e = True, keyable = True)
