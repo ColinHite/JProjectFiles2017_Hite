@@ -1,8 +1,11 @@
 import maya.cmds as cmds
 
 def make_rk(objectName):
+    
+	selsTemp = cmds.ls(sl = True)
+	master_ctrl_temp = selsTemp[-1]
 	cmds.select (cmds.ls (type = "joint"))
-	cmds.select ("Transform_Master_ctrl", add = True)
+	cmds.select (str(master_ctrl_temp), add = True)
 	sels = cmds.ls (sl = True)
 
 	#asign what the last item is as the control
@@ -19,11 +22,10 @@ def make_rk(objectName):
 
 		#This line makes the reverse node for the Rk connection
 		reverseNodeName = cmds.shadingNode("reverse", asUtility = True, name = (str(objectName) + "_RKrn_0" + str(i + 1)))
-		#These lines make the connections in the connection editor
+		#These lines make the connections in the connection editor to and from a reverse node
 		cmds.connectAttr ((str(Master_ctrl) + ".RK_Switch"), (str(reverseNodeName) + ".inputX"), f = True)
-		#the parent constraints arent fullproof because they go off of established naming schemes
-		cmds.connectAttr ((str(reverseNodeName) + ".outputX"), (parentConName + ".BFK_0" + str(i + 1) + "_jntW0"), f = True)
-		cmds.connectAttr ((str(Master_ctrl) + ".RK_Switch"), (parentConName + ".IK_" + str(i + 1) + "_jntW1"), f = True)
+		cmds.connectAttr ((str(reverseNodeName) + ".outputX"), (parentConName + "." + sels[i] + "W0"), f = True)
+		cmds.connectAttr ((str(Master_ctrl) + ".RK_Switch"), (parentConName + "." + sels[(i + ((len(sels) - 1) / 3))] + "W1"), f = True)
 
 	# create the visibilty switch for the controls ie the connection
 	cmds.connectAttr ((str(objectName) + "_RKrn_01" + ".outputX"), "BFK_ctrl_grp.visibility", f = True)

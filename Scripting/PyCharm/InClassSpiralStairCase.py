@@ -1,24 +1,20 @@
-#In class multiConstraint script
 import maya.cmds as cmds
 
-def every_other():
+def MakeCOutliner():
 
-    ###
-    ###
+	mainWin = "C.H. Outliner"
 
-    #get selection array
-    sels = cmds.ls (sl = True)
-    #create a check for even number of array objects ie. control joint control joint...
-    if len(sels) % 2:
-        cmds.error("An odd number of nodes has been seleted. Please select an even number of nodes.")
-    #split the targets from the parents
-    targets = sels[0::2]
-    #constrain each pair
-    nodes = sels[1::2]
+	if (cmds.window (mainWin, exists = True)):
+		cmds.deleteUI (mainWin, window = True)
 
-    for index, element in enumerate(targets):
-        cmds.parentConstraint(taregets[index], nodes[index])
+	#These lines only make the windows
+	mainWin = cmds.window (mainWin)
 
-    cmds.select(targets, r = True)
-every_other():
-    #this should work but youll have to get it working somehow
+	columnObj = cmds.rowColumnLayout (nc = 2, parent = mainWin)
+        cmds.button()
+    #cmds.button()
+    #cmds.button()
+
+	cmds.showWindow(mainWin)
+
+MakeCOutliner()
