@@ -1,0 +1,8 @@
+string $sels[] = `ls -sl`;
+
+select -r $sels[0];
+float $jointOri[] = `joint -q -o`;
+
+select $sels[1];
+
+rotate ($jointOri[0], $jointOri[1], $jointOri[2]);
