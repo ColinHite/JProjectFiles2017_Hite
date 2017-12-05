@@ -14,6 +14,8 @@ def make_ik(objectName):
         if(i == 1):
         	
         
+        #3570 Section 2 for rodaynes class ask marianna if thall work instead of normal writing. 
+        
         #These lines get info about the joints
         cmds.select(selections[i], r = True)
         jointOri = cmds.xform(selections[i], q = True, ro = True, ws = True)

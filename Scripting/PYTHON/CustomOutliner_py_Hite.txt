@@ -3,7 +3,9 @@ import maya.cmds as cmds
 def MakeCOutliner():
 
 	mainWin = "C.H. Outliner"
-
+	
+	sels = cmds.ls (sl = True)
+	
 	if (cmds.window (mainWin, exists = True)):
 		cmds.deleteUI (mainWin, window = True)
 		
@@ -13,11 +15,10 @@ def MakeCOutliner():
 	columnObj = cmds.rowColumnLayout (numberOfColumns=2, parent = mainWin)
         cmds.button()
         cmds.button()
-        cmds.button()
+	cmds.textScrollList(ams = True, a = (sels))
+    	#allowedAreas = ['right', 'left']
+        #cmds.dockControl( area='left', content=mainWin, allowedArea=allowedAreas )
 	
-    	allowedAreas = ['right', 'left']
-        cmds.dockControl( area='left', content=mainWin, allowedArea=allowedAreas )
-	
-	#cmds.showWindow(mainWin)
+	cmds.showWindow(mainWin)
 	
 MakeCOutliner()
