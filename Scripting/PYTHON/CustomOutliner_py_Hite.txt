@@ -1,24 +1,40 @@
 import maya.cmds as cmds
 
-def MakeCOutliner():
 
-	mainWin = "C.H. Outliner"
-	
-	sels = cmds.ls (sl = True)
-	
-	if (cmds.window (mainWin, exists = True)):
-		cmds.deleteUI (mainWin, window = True)
-		
-	#These lines only make the windows
-	mainWin = cmds.window (mainWin)
-	
-	columnObj = cmds.rowColumnLayout (numberOfColumns=2, parent = mainWin)
-        cmds.button()
-        cmds.button()
-	cmds.textScrollList(ams = True, a = (sels))
-    	#allowedAreas = ['right', 'left']
-        #cmds.dockControl( area='left', content=mainWin, allowedArea=allowedAreas )
-	
-	cmds.showWindow(mainWin)
-	
+def MakeCOutliner():
+    # Makes window
+    mainWinName = "C.H. Outliners"
+
+    # Checks if the window is made or not. If so then it deletes the old one and makes a new one. // not working bug #1
+    if cmds.window(mainWinName, exists=True):
+        cmds.deleteUI(mainWinName, window=True)
+
+    # This makes the window item
+    mainWin = cmds.window(mainWinName)
+
+    # This makes the row columnLayout
+    columnObj = cmds.columnLayout(parent=mainWin)
+    rowObj = cmds.rowLayout(parent=columnObj, numberOfColumns=2)
+    # These are the buttons to do stuff
+    addItemsBtn = cmds.button(parent=rowObj, label="AddItems")
+    removeItemsBtn = cmds.button(parent=rowObj, label="RemoveItems")
+    # This makes the text scroll list to hold the items
+    scrollList = cmds.textScrollList(ams=True, parent=columnObj, selectCommand=lambda *args: Select(scrollList))
+
+    cmds.button(addItemsBtn, e=True, c=lambda *args: AddItems(scrollList))
+    cmds.button(removeItemsBtn, e=True, c=lambda *args: RemoveItems(scrollList))
+    
+    # This makes the window visible
+    cmds.showWindow(mainWin)
+
+def Select(scrollList):
+    selectedListItems=cmds.textScrollList(scrollList, q=True, si=True)
+    cmds.select(selectedListItems)
+def AddItems(scrollList):
+    sels = cmds.ls(sl=True)
+    cmds.textScrollList(scrollList, e=True, a=sels)
+def RemoveItems(scrollList):
+    sels = cmds.ls(sl=True)
+    cmds.textScrollList(scrollList, e=True, ri=sels)
+    
 MakeCOutliner()

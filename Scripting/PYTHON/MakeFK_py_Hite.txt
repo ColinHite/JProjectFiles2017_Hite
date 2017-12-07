@@ -4,9 +4,9 @@ def MakeFK(objectName):
 	
 	for i in range(len(selections)):
 		#These lines make the controls
-		controlNames = cmds.circle(name = (objectName + "_0" + str(i + 1) + "_ctrl"), c = (0, 0, 0), nr = (0, 1, 0), sw = 360, r = 1, d = 3, ut = 0, tol = 0.01, s = 8)
-		cmds.setAttr((objectName + "_0" + str(i + 1) + "_ctrl.v"), lock = True, keyable = False, channelBox = False)
-		groupNames = cmds.group(name = (objectName + "_0" + str(i + 1) + "_grp"))
+		controlNames = cmds.circle(name = (objectName + "_0" + str(i + 1) + "_BFK_ctrl"), c = (0, 0, 0), nr = (0, 1, 0), sw = 360, r = 1, d = 3, ut = 0, tol = 0.01, s = 8)
+		cmds.setAttr((objectName + "_0" + str(i + 1) + "_BFK_ctrl.v"), lock = True, keyable = False, channelBox = False)
+		groupNames = cmds.group(name = (objectName + "_0" + str(i + 1) + "_BFK_grp"))
 		
 		#These lines get info about the joints
 		cmds.select(selections[i], r = True)
@@ -26,16 +26,16 @@ def MakeFK(objectName):
 		cmds.scaleConstraint(offset = (1, 1, 1), weight = 1)
 		
 		if(i != 0):
-			cmds.parent((objectName + "_0" + str(i + 1) + "_grp"), (objectName + "_0" + str(i) + "_ctrl"))
+			cmds.parent((objectName + "_0" + str(i + 1) + "_BFK_grp"), (objectName + "_0" + str(i) + "_BFK_ctrl"))
 	# This for loop connects the parent constraints to the BFK atrributes in the channel box
 	for l in range(len(selections)):
 		
-		cmds.select((objectName + "_0" + str(l + 1) + "_ctrl"), r = True)
+		cmds.select((objectName + "_0" + str(l + 1) + "_BFK_ctrl"), r = True)
 		cmds.delete(ch = True)
 
 	# These lines make the Controls group with the master control first and the BFK chain second in its own group
 	cmds.select(cl = True)
-	cmds.select((objectName + "_01_grp"), add = True)
+	cmds.select((objectName + "_01_BFK_grp"), add = True)
 	cmds.group(name = (objectName + "_ctrl_grp"))
 	cmds.select(cl = True)
 	cmds.select((objectName + "_ctrl_grp"), add = True)
@@ -52,5 +52,5 @@ def MakeFK(objectName):
 		cmds.group(selections[0], name = "Joints")
 	for k in range(len(selections)):
 		#This line renames the joints in the chain
-		cmds.rename(selections[k], (objectName + "_0" + str(k + 1) + "_jnt"))
-MakeFK("Leg")
+		cmds.rename(selections[(-1 * (k + 1))], (objectName + "_FK_0" + str((len(selections) - k)) + "_jnt"))
+MakeFK("Arm")
