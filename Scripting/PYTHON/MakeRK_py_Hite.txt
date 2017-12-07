@@ -5,6 +5,12 @@ def make_rk(objectName):
 	selsTemp = cmds.ls(sl = True)
 	master_ctrl_temp = selsTemp[-1]
 	
+	#This if statement handles the scene parenting structure for the joints group
+	if (cmds.objExists("Joints")):
+		cmds.parent(selsTemp[2], "Joints")
+	else:
+		cmds.group(selsTemp[2], name = "Joints")
+	
 	cmds.hide(selsTemp[0], selsTemp[1])
 	
 	cmds.select (selsTemp[2], hi = True, r = True)
