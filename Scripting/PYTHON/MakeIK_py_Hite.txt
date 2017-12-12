@@ -1,7 +1,6 @@
-#3570 Section 2 for rodaynes class ask marianna if thall work instead of normal writing. 
-
 import maya.cmds as cmds
-def make_ik(objectName, moveDir):
+
+def make_ik(objectName):
 	#Select the joint chian that you want to make ik
 	cmds.select (hi = True)
 	selections = cmds.ls (sl = True)
@@ -31,25 +30,15 @@ def make_ik(objectName, moveDir):
 	cmds.select(objectName + "_IK_02_grp", r = True)
 	cmds.group(name = (objectName + "_IKOffset_02_grp"))
 	cmds.select(objectName + "_IK_02_grp", r = True)
-	if(moveDir == "x"):
-		pv_control_pos = cmds.xform(q = True, a = True, t = True)
-		cmds.move( (10 + pv_control_pos[0]), moveX = True)
-	if(moveDir == "y"):
-		pv_control_pos = cmds.xform(q = True, a = True, t = True)
-		cmds.move((10 + pv_control_pos[1]), moveY = True)
-	if(moveDir == "z"):
-		pv_control_pos = cmds.xform(q = True, a = True, t = True)
-		cmds.move((10 + pv_control_pos[2]), moveZ = True)
+	
+	firstJointTrans = cmds.joint(selections[0], q = True, a = True, p = True)
+	poleVJointTrans = cmds.joint(selections[1], q = True, a = True, p = True)
+	lastJointTrans = cmds.joint(selections[2], q = True, a = True, p = True)
+	
+	midpoint = ( ((firstJointTrans[0] + lastJointTrans[0]) / 2), ((firstJointTrans[1] + lastJointTrans[1]) / 2), ((firstJointTrans[2] + lastJointTrans[2]) / 2) )
 
-	if(moveDir == "-x"):
-		pv_control_pos = cmds.xform(q = True, a = True, t = True)
-		cmds.move((pv_control_pos[0] - 10), moveX = True)
-	if(moveDir == "-y"):
-		pv_control_pos = cmds.xform(q = True, a = True, t = True)
-		cmds.move((pv_control_pos[1] - 10), moveY = True)
-	if(moveDir == "-z"):
-		pv_control_pos = cmds.xform(q = True, a = True, t = True)
-		cmds.move((pv_control_pos[2] - 10), moveZ = True)
+	newPoint = ((poleVJointTrans[0] - midpoint[0]), (poleVJointTrans[1] - midpoint[1]), (poleVJointTrans[2] - midpoint[2]))
+	cmds.move(poleVJointTrans[0] + newPoint[0], poleVJointTrans[1] + newPoint[1], poleVJointTrans[2] + newPoint[2], objectName + "_IK_02_grp",)
 	#make the Ik system through maya
 	cmds.ikHandle(n=(objectName + "_IK_Handle"), sj = selections[0], ee = selections[-1], sol = "ikRPsolver")
 
@@ -74,4 +63,4 @@ def make_ik(objectName, moveDir):
 	for k in range(len(selections)):
 		#This line renames the joints in the chain
 		cmds.rename(selections[(-1 * (k + 1))], (objectName + "_IK_0" + str((len(selections) - k)) + "_jnt"))
-make_ik("Arm", "-x")
+make_ik("Arm")

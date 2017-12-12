@@ -14,15 +14,17 @@ def MakeCOutliner():
 
     # This makes the row columnLayout
     columnObj = cmds.columnLayout(parent=mainWin)
-    rowObj = cmds.rowLayout(parent=columnObj, numberOfColumns=2)
+    rowObj = cmds.rowLayout(parent=columnObj, numberOfColumns=3)
     # These are the buttons to do stuff
     addItemsBtn = cmds.button(parent=rowObj, label="AddItems")
     removeItemsBtn = cmds.button(parent=rowObj, label="RemoveItems")
+    removeAllBtn = cmds.button(parent=rowObj, label="Clear")
     # This makes the text scroll list to hold the items
     scrollList = cmds.textScrollList(ams=True, parent=columnObj, selectCommand=lambda *args: Select(scrollList))
 
     cmds.button(addItemsBtn, e=True, c=lambda *args: AddItems(scrollList))
     cmds.button(removeItemsBtn, e=True, c=lambda *args: RemoveItems(scrollList))
+    cmds.button(removeAllBtn, e=True, c=lambda *args: Clear(scrollList))
     
     # This makes the window visible
     cmds.showWindow(mainWin)
@@ -33,8 +35,22 @@ def Select(scrollList):
 def AddItems(scrollList):
     sels = cmds.ls(sl=True)
     cmds.textScrollList(scrollList, e=True, a=sels)
+    getAllInList = cmds.textScrollList(scrollList, q=True, ai = True)
+    cmds.textScrollList(scrollList, e=True, ra = True)
+    singleItemList = list(set(getAllInList))
+    cmds.textScrollList(scrollList, e=True, a=singleItemList)
 def RemoveItems(scrollList):
     sels = cmds.ls(sl=True)
     cmds.textScrollList(scrollList, e=True, ri=sels)
-    
+def Clear(scrollList):
+	sels = cmds.ls(sl=True)
+	cmds.textScrollList(scrollList, e=True, ra = True)
+def SortAlpha(scrollList):
+	getAllInList = cmds.textScrollList(scrollList, q=True, ai = True)
+	cmds.textScrollList(scrollList, e=True, ra = True)
+	sorted(getAllInList)
+
+#def ListUp():
+
+#def ListDown():
 MakeCOutliner()

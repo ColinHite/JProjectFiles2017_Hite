@@ -1,62 +1,57 @@
 import maya.cmds as cmds
 
 
-def MakeToolBox():
-    mainWin = "C.H. Tool Box"
+def make_rk(objectName):
+    selsTemp = cmds.ls(sl=True)
+    master_ctrl_temp = selsTemp[-1]
 
-    if (cmds.window(mainWin, exists=True)):
-        cmds.deleteUI(mainWin, window=True)
+    # This if statement handles the scene parenting structure for the joints group
+    if (cmds.objExists("Joints")):
+        cmds.parent(selsTemp[2], "Joints")
+    else:
+        cmds.group(selsTemp[2], name="Joints")
 
-        # These lines only make the windows
-    mainWin = cmds.window(mainWin)
-    columnObj = cmds.columnLayout(parent=mainWin)
+    cmds.hide(selsTemp[0], selsTemp[1])
 
+    cmds.select(selsTemp[2], hi=True, r=True)
+    jntRename = cmds.ls(sl=True)
+    for k in range(len(jntRename)):
+        cmds.rename(jntRename[k], (objectName + "_RK_0" + str(k + 1) + "_jnt"))
+    cmds.select(cmds.ls(type="joint"), r=True)
+    cmds.select(str(master_ctrl_temp), add=True)
+    RKsels = cmds.ls(sl=True)
 
-rowRenameSels = cmds.rowLayout(parent=columnObj)
+    # asign what the last item is as the control
+    Master_ctrl = RKsels[-1]
 
-renameBtn = cmds.button(parent=rowRenameSels, label="Rename Selection")
-renameBtnNewName = cmds.textFieldGrp(parent=rowRenameSels, label="Rename Selection", placeholderText="Enter a new name")
-renameBtnNewSuffix = cmds.textFieldGrp(parent=rowRenameSels, placeholderText="Enter a new suffix")
+    # Make the attribute on the master control
+    cmds.addAttr(Master_ctrl, ln="RK_Switch", at="double", min=0, max=1, dv=0)
+    cmds.setAttr((str(Master_ctrl) + ".RK_Switch"), e=True, keyable=True)
 
-centerLocBtnBool = cmds.checkBox(parent=columnObj, label="individual/whole")
-centerLocatorBtn = cmds.button(parent=columnObj, label="Find Center")
+    # make the parent constraints to the RK system
+    for i in range((len(RKsels) - 1) / 3):
+        cmds.parentConstraint(RKsels[i], RKsels[(i + ((len(RKsels) - 1) / 3))],
+                              RKsels[(i + (2 * ((len(RKsels) - 1) / 3)))], mo=True, weight=1)
+        parentConName = cmds.parentConstraint(RKsels[i], RKsels[(i + ((len(RKsels) - 1) / 3))],
+                                              RKsels[(i + (2 * ((len(RKsels) - 1) / 3)))], q=True, n=True, mo=True,
+                                              weight=1)
 
-randPlaceBtnObjCnt = cmds.intField(parent=columnObj)
-randomPlacementBtn = cmds.button(parent=columnObj, label="Place Obj Random")
-
-# orientJntBtn = cmds.button (parent = columnObj, label = "Orient Joint")
-
-cmds.button(renameBtn, e=True, c=("RenameSel(\"" + renameBtnNewName + "\", \"" + renameBtnNewSuffix + "\")"))
-cmds.button(centerLocatorBtn, e=True, c=("FindCenterBtn(\"" + centerLocBtnBool + "\")"))
-cmds.button(randomPlacementBtn, e=True, c=("RandSurfaceGen(\"" + randPlaceBtnObjCnt + "\")"))
-
-cmds.showWindow(mainWin)
-
-
-def RenameSel(renameBtnNewName, renameBtnNewSuffix):
-    newName = cmds.textFieldGrp(renameBtnNewName, q=True, text=True)
-    suffix = cmds.textFieldGrp(renameBtnNewSuffix, q=True, text=True)
-
-    import RenameItems_py_Hite as RI
-    RI.rename_select(newName, suffix)
-
-
-def FindCenterBtn(centerLocBtnBool):
-    onOff = cmds.checkBox(centerLocBtnBool, q=True, v=True)
-
-    import FindCenter_py_Hite as FC
-    FC.find_center(onOff)
+        # This line makes the reverse node for the Rk connection
+        reverseNodeName = cmds.shadingNode("reverse", asUtility=True, name=(str(objectName) + "_RKrn_0" + str(i + 1)))
+        # These lines make the connections in the connection editor to and from a reverse node
+    cmds.connectAttr((str(Master_ctrl) + ".RK_Switch"), (str(reverseNodeName) + ".inputX"), f=True)
+    cmds.connectAttr((str(reverseNodeName) + ".outputX"), (parentConName + "." + RKsels[i] + "W0"), f=True)
+    cmds.connectAttr((str(Master_ctrl) + ".RK_Switch"),
+                     (parentConName + "." + RKsels[(i + ((len(RKsels) - 1) / 3))] + "W1"), f=True)
 
 
-def RandSurfaceGen(randPlaceBtnObjCnt):
-    objCount = cmds.intField(randPlaceBtnObjCnt, q=True, v=True)
-
-    import RandSurfacePop_py_Hite as RSP
-    RSP.random_cloud(objCount)
-
-
-# global def ReorientJoint():
-#    source PointJnt_Hite
-#    pointJnt()
-
-MakeToolBox()
+    if (objExists(objectName + "_BFK_ctrl_grp")):
+        # create the visibilty switch for the controls ie the connection
+        cmds.connectAttr((str(objectName) + "_RKrn_01" + ".outputX"), objectName + "_BFK_ctrl_grp.visibility", f=True)
+        cmds.connectAttr((str(Master_ctrl) + ".RK_Switch"), objectName + "_IK_ctrl_grp.visibility", f=True)
+    elif (objExists(objectName + "_FK_ctrl_grp")):
+        cmds.connectAttr((str(objectName) + "_RKrn_01" + ".outputX"), objectName + "_FK_ctrl_grp.visibility", f=True)
+        cmds.connectAttr((str(Master_ctrl) + ".RK_Switch"), objectName + "_IK_ctrl_grp.visibility", f=True)
+    else:
+        print("Please make the connections for the visibility of the controls in the connection editor. Something is not named either '_BFK_ctrl_grp', or FK respectivly.")
+make_rk("Arm")
