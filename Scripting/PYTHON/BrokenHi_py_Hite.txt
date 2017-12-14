@@ -83,4 +83,4 @@ def MakeBFK(objectName):
 	for k in range(len(selections)):
 		#This line renames the joints in the chain
 		cmds.rename(selections[(-1 * (k + 1))], (objectName + "_BFK_0" + str((len(selections) - k)) + "_jnt"))
-MakeBFK("Arm")
+MakeBFK("Leg")

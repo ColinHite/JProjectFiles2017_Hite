@@ -63,4 +63,4 @@ def make_ik(objectName):
 	for k in range(len(selections)):
 		#This line renames the joints in the chain
 		cmds.rename(selections[(-1 * (k + 1))], (objectName + "_IK_0" + str((len(selections) - k)) + "_jnt"))
-make_ik("Arm")
+make_ik("Leg")

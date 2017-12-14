@@ -25,11 +25,20 @@ def MakeToolBox():
     randomPlacementBtn = cmds.button(parent=rowRandPlace, label="Place Obj Random")
     randPlaceBtnObjCnt = cmds.intField(parent=rowRandPlace)
     
+    delHistoryBtn = cmds.button(parent=columnObj, label="Delete History")
+    freezeTransBtn = cmds.button(parent=columnObj, label="Freeze Transform")
+    centerPivBtn = cmds.button(parent=columnObj, label="Center Pivot")
+    parScaConBtn = cmds.button(parent=columnObj, label="Parent-Scale Constraint")
     # orientJntBtn = cmds.button (parent = columnObj, label = "Orient Joint")
     
     cmds.button(renameBtn, e=True, c=("RenameSel(\"" + renameBtnNewName + "\", \"" + renameBtnNewSuffix + "\")"))
     cmds.button(centerLocatorBtn, e=True, c=("FindCenterBtn(\"" + centerLocBtnBool + "\")"))
     cmds.button(randomPlacementBtn, e=True, c=("RandSurfaceGen(\"" + randPlaceBtnObjCnt + "\")"))
+    
+    cmds.button(delHistoryBtn, e=True, c=lambda *args: DelHistory())
+    cmds.button(freezeTransBtn, e=True, c=lambda *args: FreezeTrans())
+    cmds.button(centerPivBtn, e=True, c=lambda *args: CenterPiv())
+    cmds.button(parScaConBtn, e=True, c=lambda *args: ParScaCon())
     
     cmds.showWindow(mainWin)
 
@@ -55,7 +64,15 @@ def RandSurfaceGen(randPlaceBtnObjCnt):
     import RandSurfacePop_py_Hite as RSP
     RSP.random_cloud(objCount)
 
-
+def DelHistory():
+	cmds.delete(ch = True)
+def FreezeTrans():
+	cmds.makeIdentity(a = True, t = 1, r = 1, s = 1, n = 0, pn = 1)
+def CenterPiv():
+	cmds.xform(cpc = True)
+def ParScaCon():
+	cmds.parentConstraint(mo = True, weight = 1)
+	cmds.scaleConstraint(mo = True, weight = 1)
 # global def ReorientJoint():
 #    source PointJnt_Hite
 #    pointJnt()
