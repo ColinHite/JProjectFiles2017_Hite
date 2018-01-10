@@ -84,14 +84,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\MakeItemMiniMap.cs" />
-    <Compile Include="Assets\MiniMapOnOff.cs" />
     <Compile Include="Assets\PlayerMovement.cs" />
     <Compile Include="Assets\RealtiveMiniMapTranslate.cs" />
-    <Compile Include="Assets\TestForMiniOnOff.cs" />
     <Compile Include="Assets\TestOnExit.cs" />
     <Compile Include="Assets\TestRelativeMoveScript.cs" />
-    <Compile Include="Assets\TurnMiniMapOff.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Hologram.shader" />

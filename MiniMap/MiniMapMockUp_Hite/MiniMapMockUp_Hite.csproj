@@ -91,6 +91,7 @@
     <Compile Include="Assets\MiniMapOnOff.cs" />
     <Compile Include="Assets\PlayerMovement.cs" />
     <Compile Include="Assets\RealtiveMiniMapTranslate.cs" />
+    <Compile Include="Assets\Spawn items.cs" />
     <Compile Include="Assets\TestForMiniOnOff.cs" />
     <Compile Include="Assets\TestOnExit.cs" />
     <Compile Include="Assets\TestRelativeMoveScript.cs" />

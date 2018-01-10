@@ -18,3 +18,16 @@ Path 'C:/GitHub_Hite/JProjectFiles2017_Hite/MiniMap/MiniMapMockUp_Hite\testForPr
 Error: Path 'C:/GitHub_Hite/JProjectFiles2017_Hite/MiniMap/MiniMapMockUp_Hite\testForProjectRootMapping' is not under client's root 'C:\Users\10712935\Documents\Colinperforce'.
 
 e32:Path 'C:/GitHub_Hite/JProjectFiles2017_Hite/MiniMap/MiniMapMockUp_Hite\\testForProjectRootMapping' is not under client's root 'C:\\Users\\10712935\\Documents\\Colinperforce'.\n
+The authenticity of '161.28.117.27:1666' can't be established,
+this may be your first attempt to connect to this P4PORT.
+The fingerprint for the key sent to your client is
+A0:4E:60:0A:05:5A:B7:93:CD:D6:2E:51:48:DD:9A:CE:C8:4B:28:47
+To allow connection use the 'p4 trust' command.
+
+Error: The authenticity of '161.28.117.27:1666' can't be established,
+this may be your first attempt to connect to this P4PORT.
+The fingerprint for the key sent to your client is
+A0:4E:60:0A:05:5A:B7:93:CD:D6:2E:51:48:DD:9A:CE:C8:4B:28:47
+To allow connection use the 'p4 trust' command.
+
+e32:The authenticity of '161.28.117.27:1666' can't be established,\nthis may be your first attempt to connect to this P4PORT.\nThe fingerprint for the key sent to your client is\nA0:4E:60:0A:05:5A:B7:93:CD:D6:2E:51:48:DD:9A:CE:C8:4B:28:47\nTo allow connection use the 'p4 trust' command.\n
