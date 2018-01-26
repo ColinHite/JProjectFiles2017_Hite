@@ -1,0 +1,14 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\PlayerDeathUI.cs">
+    <Files>
+      <File FileName="Assets\NetworkedHealth.cs" Line="1" Column="1" />
+      <File FileName="Assets\DeathEvent.cs" Line="13" Column="29" />
+      <File FileName="Assets\PlayerDeathUI.cs" Line="22" Column="137" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
